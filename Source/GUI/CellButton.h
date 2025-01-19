@@ -32,12 +32,28 @@ namespace jr
                 repaint();
             }
 
+            void setNextValue(bool _isAlive)
+            {
+                nextValue = _isAlive;
+            }
+
+            void triggerGeneration()
+            {
+                isAlive = nextValue;
+            }
+
             void paint(juce::Graphics& g) override
             {
                 g.fillAll(isAlive ? juce::Colours::white : juce::Colours::black);
             }
 
+            bool getIsAlive()
+            {
+                return isAlive;
+            }
+
         private:
             bool isAlive{ false };
+            bool nextValue{ false };
     };
 }

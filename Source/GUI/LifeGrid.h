@@ -18,11 +18,6 @@ using Cell2DGrid = std::vector<CellArray*>;
 
 namespace jr
 {
-    namespace Dimensions
-    {
-        const int rowSize{ 10 };
-    }
-
     class LifeGrid : public juce::Component
     {
         public:
@@ -31,9 +26,18 @@ namespace jr
 
             void resized() override;
 
+            void nextGeneration();
+
+            void randomiseSetup();
+
         private:
+            bool getCellNextGeneration(bool isAlive, int m, int n);
+            int getNumOfAliveNeighbours(int m, int n);
+
             Cell2DGrid cellGrid;
             const int rowSize{ 25 };
             const int numRows = 25;
+
+            bool hasInit{ false };
     };
 }
