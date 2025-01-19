@@ -15,7 +15,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 {
     addAndMakeVisible(lifeGrid);
 
-    setSize (400, 300);
+    setSize (400, 400);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()

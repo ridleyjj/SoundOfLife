@@ -15,17 +15,45 @@ namespace jr
 {
     LifeGrid::LifeGrid()
     {
-        addAndMakeVisible(cell);
+        // populate grid with cells
+        for (int rowNum{}; rowNum < numRows; rowNum++)
+        {
+            auto row = new CellArray();
+            for (int i{}; i < rowSize; i++)
+            {
+                row->push_back(new CellButton());
+                addAndMakeVisible(row->at(i));
+            }
+            cellGrid.push_back(row);
+        }
     }
 
-    void LifeGrid::paint(juce::Graphics& g)
+    LifeGrid::~LifeGrid()
     {
-        g.fillAll(juce::Colours::red);
+        // free memory
+        for (int rowNum{}; rowNum < numRows; rowNum++)
+        {
+            for (int i{}; i < rowSize; i++)
+            {
+                delete cellGrid.at(rowNum)->at(i);
+            }
+            delete cellGrid.at(rowNum);
+        }
     }
 
     void LifeGrid::resized()
     {
-        juce::Rectangle<int> cellSize = juce::Rectangle<int>().withCentre(getBounds().getCentre()).withWidth(20).withHeight(20);
-        cell.setBounds(cellSize);
+        auto container = getLocalBounds();
+        auto rowHeight = container.proportionOfHeight(1.0f / numRows);
+        auto cellWidth = container.proportionOfWidth(1.0f / rowSize);
+
+        for (int rowNum{}; rowNum < numRows; rowNum++)
+        {
+            auto row = container.removeFromTop(rowHeight);
+            for (int cellIndex{}; cellIndex < rowSize; cellIndex++)
+            {
+                cellGrid.at(rowNum)->at(cellIndex)->setBounds(row.removeFromLeft(cellWidth));
+            }
+        }
     }
 }

@@ -11,18 +11,29 @@
 #pragma once
 #include <JuceHeader.h>
 #include "CellButton.h"
+#include <vector>
+using CellArray = std::vector<jr::CellButton*>;
+using Cell2DGrid = std::vector<CellArray*>;
+
 
 namespace jr
 {
+    namespace Dimensions
+    {
+        const int rowSize{ 10 };
+    }
+
     class LifeGrid : public juce::Component
     {
         public:
             LifeGrid();
+            ~LifeGrid();
 
-            void paint(juce::Graphics& g) override;
             void resized() override;
 
         private:
-            CellButton cell;
+            Cell2DGrid cellGrid;
+            const int rowSize{ 25 };
+            const int numRows = 25;
     };
 }
