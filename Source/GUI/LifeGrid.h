@@ -9,3 +9,20 @@
 */
 
 #pragma once
+#include <JuceHeader.h>
+#include "CellButton.h"
+
+namespace jr
+{
+    class LifeGrid : public juce::Component
+    {
+        public:
+            LifeGrid();
+
+            void paint(juce::Graphics& g) override;
+            void resized() override;
+
+        private:
+            CellButton cell;
+    };
+}
