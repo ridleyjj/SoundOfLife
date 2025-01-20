@@ -4,6 +4,9 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="ge6m83" name="SoundOfLife">
     <GROUP id="{30FD4B2E-4851-16D1-E88C-26ACDA8483E3}" name="Source">
+      <GROUP id="{E7DD60B1-15BF-89EF-EF65-8AA8B46BB9A3}" name="Utils">
+        <FILE id="J7w3LG" name="jr_JuceUtils.h" compile="0" resource="0" file="Source/Utils/jr_JuceUtils.h"/>
+      </GROUP>
       <GROUP id="{F31B553D-D90A-C39E-2F6F-EAA4A7321B90}" name="GUI">
         <FILE id="IzDE6C" name="CellButton.h" compile="0" resource="0" file="Source/GUI/CellButton.h"/>
         <FILE id="qyut2p" name="LifeGrid.cpp" compile="1" resource="0" file="Source/GUI/LifeGrid.cpp"/>
