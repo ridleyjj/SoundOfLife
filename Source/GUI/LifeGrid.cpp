@@ -43,6 +43,18 @@ namespace jr
         }
     }
 
+    void LifeGrid::forEachCell(std::function<void(CellButton*, int, int)> callBack)
+    {
+        for (int rowNum{}; rowNum < numRows; rowNum++)
+        {
+            for (int cellIndex{}; cellIndex < rowSize; cellIndex++)
+            {
+                auto cell = cellGrid.at(rowNum)->at(cellIndex);
+                callBack(cell, rowNum, cellIndex);
+            }
+        }
+    }
+
     void LifeGrid::resized()
     {
         auto container = getLocalBounds();
@@ -62,14 +74,12 @@ namespace jr
     void LifeGrid::randomiseSetup()
     {
         juce::Random random{};
-        for (int i{}; i < numRows; i++)
-        {
-            for (int j{}; j < rowSize; j++)
+        auto chooseRandomState = [&random](CellButton* cell, int, int)
             {
-                cellGrid.at(i)->at(j)->setNextValue(random.nextBool());
-                cellGrid.at(i)->at(j)->triggerGeneration();
-            }
-        }
+                cell->setNextValue(random.nextBool());
+                cell->triggerGeneration();
+            };
+        forEachCell(chooseRandomState);
         repaint();
     }
 
@@ -77,21 +87,18 @@ namespace jr
     {
         if (!hasInit) return;
 
-        for (int i{}; i < numRows; i++)
-        {
-            for (int j{}; j < rowSize; j++)
+        auto calcNextValue = [&](CellButton* cell, int i, int j)
             {
-                auto isAlive = cellGrid.at(i)->at(j)->getIsAlive();
-                cellGrid.at(i)->at(j)->setNextValue(getCellNextGeneration(isAlive, i, j));
-            }
-        }
-        for (int i{}; i < numRows; i++)
-        {
-            for (int j{}; j < rowSize; j++)
+                bool isAlive = cell->getIsAlive();
+                cell->setNextValue(getCellNextGeneration(isAlive, i, j));
+            };
+        auto triggerChange = [](CellButton* cell, int, int)
             {
-                cellGrid.at(i)->at(j)->triggerGeneration();
-            }
-        }
+                cell->triggerGeneration();
+            };
+
+        forEachCell(calcNextValue);
+        forEachCell(triggerChange);
         repaint();
     }
 

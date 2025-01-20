@@ -34,6 +34,8 @@ namespace jr
             bool getCellNextGeneration(bool isAlive, int m, int n);
             int getNumOfAliveNeighbours(int m, int n);
 
+            void forEachCell(std::function<void(CellButton*, int, int)> callback);
+
             Cell2DGrid cellGrid;
             const int rowSize{ 25 };
             const int numRows = 25;
