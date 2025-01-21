@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "CellButton.h"
+#include "../Service/LifeGridService.h"
 #include <vector>
 using CellArray = std::vector<jr::CellButton*>;
 using Cell2DGrid = std::vector<CellArray*>;
@@ -18,28 +19,21 @@ using Cell2DGrid = std::vector<CellArray*>;
 
 namespace jr
 {
-    class LifeGrid : public juce::Component
+    class LifeGridGUI : public juce::Component
     {
         public:
-            LifeGrid();
-            ~LifeGrid();
+            LifeGridGUI(LifeGridService& _service);
+            ~LifeGridGUI();
 
             void resized() override;
 
-            void nextGeneration();
-
-            void randomiseSetup();
-
         private:
-            bool getCellNextGeneration(bool isAlive, int m, int n);
-            int getNumOfAliveNeighbours(int m, int n);
+            LifeGridService& lifeGridService;
 
             void forEachCell(std::function<void(CellButton*, int, int)> callback);
 
             Cell2DGrid cellGrid;
-            const int rowSize{ 25 };
-            const int numRows = 25;
-
-            bool hasInit{ false };
+            int rowSize{};
+            int numRows{};
     };
 }
