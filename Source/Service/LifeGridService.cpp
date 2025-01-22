@@ -19,7 +19,7 @@ namespace jr
 	LifeGridService::~LifeGridService()
 	{
 		// free memory
-		for (int rowNum{ numRows - 1 }; rowNum << numRows > = 0; rowNum--)
+		for (int rowNum{ numRows - 1 }; rowNum >= 0; rowNum--)
 		{
 			for (int i{ rowSize - 1 }; i >= 0; i--)
 			{
@@ -43,6 +43,8 @@ namespace jr
 
 		forEachCell(calcNextValue);
 		forEachCell(triggerChange);
+		
+		notifyListeners();
 	}
 
 	void LifeGridService::randomiseSetup()
@@ -53,6 +55,8 @@ namespace jr
 				cell->triggerGeneration();
 			};
 		forEachCell(chooseRandomState);
+
+		notifyListeners();
 	}
 
 	bool LifeGridService::getCellNextGeneration(bool isAlive, int m, int n)
@@ -105,6 +109,30 @@ namespace jr
 				auto cell = cellGrid.at(rowNum)->at(cellIndex);
 				callback(cell, rowNum, cellIndex);
 			}
+		}
+	}
+
+	void LifeGridService::addListener(std::shared_ptr<LifeGridServiceListener> gridUI)
+	{
+		listeners.push_back(std::shared_ptr<LifeGridServiceListener>(gridUI));
+	}
+
+	void LifeGridService::removeListener(std::shared_ptr<LifeGridServiceListener> gridUI)
+	{
+		for (int i{}; i < listeners.size(); i++)
+		{
+			if (listeners.at(i).get() == gridUI.get())
+			{
+				listeners.erase(listeners.begin() + i);
+			}
+		}
+	}
+
+	void LifeGridService::notifyListeners()
+	{
+		for (std::shared_ptr<LifeGridServiceListener> listener : listeners)
+		{
+			listener->onServiceStateChange();
 		}
 	}
 }

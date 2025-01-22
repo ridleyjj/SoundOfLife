@@ -21,7 +21,7 @@ namespace jr
         // populate grid with cells
         for (int rowNum{}; rowNum < numRows; rowNum++)
         {
-            auto row = new CellArray();
+            auto row = new CellButtonArray();
             for (int i{}; i < rowSize; i++)
             {
                 row->push_back(new CellButton());
@@ -36,9 +36,9 @@ namespace jr
     LifeGridGUI::~LifeGridGUI()
     {
         // free memory
-        for (int rowNum{}; rowNum < numRows; rowNum++)
+        for (int rowNum{ numRows - 1 }; rowNum >= 0; rowNum--)
         {
-            for (int i{}; i < rowSize; i++)
+            for (int i{ rowSize - 1 }; i >= 0; i--)
             {
                 delete cellGrid.at(rowNum)->at(i);
             }

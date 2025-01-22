@@ -36,7 +36,7 @@ private:
     // access the processor object that created it.
     SoundOfLifeAudioProcessor& audioProcessor;
 
-    jr::LifeGrid lifeGrid;
+    std::shared_ptr<jr::LifeGridGUI> lifeGrid;
 
     juce::TextButton nextButton{ "Next Generation" };
     juce::TextButton randomButton{ "Randomise" };

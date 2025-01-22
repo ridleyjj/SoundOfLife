@@ -13,13 +13,13 @@
 #include "CellButton.h"
 #include "../Service/LifeGridService.h"
 #include <vector>
-using CellArray = std::vector<jr::CellButton*>;
-using Cell2DGrid = std::vector<CellArray*>;
+using CellButtonArray = std::vector<jr::CellButton*>;
+using CellButton2DGrid = std::vector<CellButtonArray*>;
 
 
 namespace jr
 {
-    class LifeGridGUI : public juce::Component
+    class LifeGridGUI : public juce::Component, public LifeGridServiceListener
     {
         public:
             LifeGridGUI(LifeGridService& _service);
@@ -27,12 +27,17 @@ namespace jr
 
             void resized() override;
 
+            void onServiceStateChange() override
+            { 
+                repaint();
+            }
+
         private:
             LifeGridService& lifeGridService;
 
             void forEachCell(std::function<void(CellButton*, int, int)> callback);
 
-            Cell2DGrid cellGrid;
+            CellButton2DGrid cellGrid;
             int rowSize{};
             int numRows{};
     };

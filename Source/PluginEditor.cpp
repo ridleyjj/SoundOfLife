@@ -14,7 +14,9 @@
 SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    addAndMakeVisible(lifeGrid);
+    lifeGrid = std::make_shared<jr::LifeGridGUI>(p.getLifeGridService());
+
+    addAndMakeVisible(*lifeGrid.get());
     addAndMakeVisible(nextButton);
     addAndMakeVisible(timerButton);
     addAndMakeVisible(randomButton);
@@ -24,8 +26,10 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     frequencySlider.addListener(this);
 
     timerButton.onClick = [&]() { timerOn = !timerOn; };
-    nextButton.onClick = [&]() { lifeGrid.nextGeneration(); };
-    randomButton.onClick = [&]() { lifeGrid.randomiseSetup(); };
+    nextButton.onClick = [&]() { p.getLifeGridService().nextGeneration(); };
+    randomButton.onClick = [&]() { p.getLifeGridService().randomiseSetup(); };
+
+    p.getLifeGridService().addListener(lifeGrid);
 
     setSize (400, 550);
 
@@ -34,6 +38,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 {
+    audioProcessor.getLifeGridService().removeListener(lifeGrid);
 }
 
 //==============================================================================
@@ -57,7 +62,7 @@ void SoundOfLifeAudioProcessorEditor::resized()
     timerButton.setBounds(topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(15, 5));
     frequencySlider.setBounds(topRow.reduced(4, 24));
 
-    lifeGrid.setBounds(contentContainer);
+    lifeGrid->setBounds(contentContainer);
 }
 
 //============================= Callbacks ================================
@@ -66,7 +71,7 @@ void SoundOfLifeAudioProcessorEditor::timerCallback()
 {
     if (timerOn)
     {
-        lifeGrid.nextGeneration();
+        audioProcessor.getLifeGridService().nextGeneration();
     }
 }
 

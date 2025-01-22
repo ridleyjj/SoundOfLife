@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Service/LifeGridService.h"
 
 //==============================================================================
 /**
@@ -53,7 +54,13 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    jr::LifeGridService& getLifeGridService() { return lifeGridService; }
+
 private:
+
+    jr::LifeGridService lifeGridService;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)
 };
