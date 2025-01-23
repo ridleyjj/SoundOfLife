@@ -32,14 +32,9 @@ namespace jr
                 repaint();
             }
 
-            void setNextValue(bool _isAlive)
+            void setIsAlive(bool _isAlive)
             {
-                nextValue = _isAlive;
-            }
-
-            void triggerGeneration()
-            {
-                isAlive = nextValue;
+                isAlive = _isAlive;
             }
 
             void paint(juce::Graphics& g) override

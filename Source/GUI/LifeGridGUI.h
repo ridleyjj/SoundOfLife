@@ -27,10 +27,7 @@ namespace jr
 
             void resized() override;
 
-            void onServiceStateChange() override
-            { 
-                repaint();
-            }
+            void onServiceStateChange() override;
 
         private:
             LifeGridService& lifeGridService;

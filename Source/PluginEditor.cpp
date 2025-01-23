@@ -29,7 +29,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     nextButton.onClick = [&]() { p.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { p.getLifeGridService().randomiseSetup(); };
 
-    p.getLifeGridService().addListener(lifeGrid);
+    p.getLifeGridService().addListener(std::dynamic_pointer_cast<jr::LifeGridServiceListener> (lifeGrid));
 
     setSize (400, 550);
 

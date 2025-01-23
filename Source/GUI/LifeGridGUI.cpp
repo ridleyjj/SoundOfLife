@@ -25,8 +25,7 @@ namespace jr
             for (int i{}; i < rowSize; i++)
             {
                 row->push_back(new CellButton());
-                row->at(i)->setNextValue(lifeGridService.getCell(rowNum, i)->getIsAlive());
-                row->at(i)->triggerGeneration();
+                row->at(i)->setIsAlive(lifeGridService.getCell(rowNum, i)->getIsAlive());
                 addAndMakeVisible(row->at(i));
             }
             cellGrid.push_back(row);
@@ -72,5 +71,19 @@ namespace jr
                 cellGrid.at(rowNum)->at(cellIndex)->setBounds(row.removeFromLeft(cellWidth));
             }
         }
+    }
+
+    void LifeGridGUI::onServiceStateChange()
+    {
+        auto updateCellValue = [&](CellButton* cell, int m, int n)
+            {
+                auto serviceCell = lifeGridService.getCell(m, n);
+                if (serviceCell != nullptr)
+                {
+                    cell->setIsAlive(serviceCell->getIsAlive());
+                }
+            };
+        forEachCell(updateCellValue);
+        repaint();
     }
 }
