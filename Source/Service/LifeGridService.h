@@ -75,6 +75,6 @@ namespace jr
 
             juce::Random random{};
 
-            std::vector <std::shared_ptr< LifeGridServiceListener >> listeners;
+            std::vector <std::shared_ptr< LifeGridServiceListener >> listeners{};
 	};
 }

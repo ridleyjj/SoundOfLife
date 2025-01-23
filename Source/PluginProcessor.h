@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class SoundOfLifeAudioProcessor  : public juce::AudioProcessor
+class SoundOfLifeAudioProcessor  : public juce::AudioProcessor, public juce::Timer
 {
 public:
     //==============================================================================
@@ -57,9 +57,18 @@ public:
     //==============================================================================
     jr::LifeGridService& getLifeGridService() { return lifeGridService; }
 
+    //==============================================================================
+    void timerCallback() override;
+    void setTimerInterval(int timeInMs);
+    void toggleTimer() { timerOn = !timerOn; }
+    int getTimerIntervalMs() { return timerIntervalMs; }
+
 private:
 
     jr::LifeGridService lifeGridService;
+
+    bool timerOn{ false };
+    int timerIntervalMs{ 1000 };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)

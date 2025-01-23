@@ -22,18 +22,16 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(randomButton);
 
     jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Timer Frequency (ms)", 250, 2000, 1, true);
-    frequencySlider.setValue(timerIntervalMs, juce::dontSendNotification);
+    frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
     frequencySlider.addListener(this);
 
-    timerButton.onClick = [&]() { timerOn = !timerOn; };
-    nextButton.onClick = [&]() { p.getLifeGridService().nextGeneration(); };
-    randomButton.onClick = [&]() { p.getLifeGridService().randomiseSetup(); };
+    timerButton.onClick = [&]() { p.toggleTimer(); };
+    nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
+    randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
 
     p.getLifeGridService().addListener(std::dynamic_pointer_cast<jr::LifeGridServiceListener> (lifeGrid));
 
     setSize (400, 550);
-
-    startTimer(timerIntervalMs);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
@@ -67,24 +65,10 @@ void SoundOfLifeAudioProcessorEditor::resized()
 
 //============================= Callbacks ================================
 
-void SoundOfLifeAudioProcessorEditor::timerCallback()
-{
-    if (timerOn)
-    {
-        audioProcessor.getLifeGridService().nextGeneration();
-    }
-}
-
-void SoundOfLifeAudioProcessorEditor::setTimerInterval(int timeInMs)
-{
-    timerIntervalMs = timeInMs;
-    startTimer(timerIntervalMs);
-}
-
 void SoundOfLifeAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &frequencySlider)
     {
-        setTimerInterval(frequencySlider.getValue());
+        audioProcessor.setTimerInterval(frequencySlider.getValue());
     }
 }

@@ -124,15 +124,16 @@ namespace jr
 			if (listeners.at(i).get() == gridUI.get())
 			{
 				listeners.erase(listeners.begin() + i);
+				return;
 			}
 		}
 	}
 
 	void LifeGridService::notifyListeners()
 	{
-		for (std::shared_ptr<LifeGridServiceListener> listener : listeners)
+		for (int i{}; i < listeners.size(); i++)
 		{
-			listener->onServiceStateChange();
+			listeners.at(i)->onServiceStateChange();
 		}
 	}
 }

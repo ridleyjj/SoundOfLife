@@ -22,6 +22,7 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
                        )
 #endif
 {
+    startTimer(timerIntervalMs);
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
@@ -188,4 +189,18 @@ void SoundOfLifeAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new SoundOfLifeAudioProcessor();
+}
+
+//==============================================================================
+void SoundOfLifeAudioProcessor::timerCallback()
+{
+    if (timerOn)
+    {
+        lifeGridService.nextGeneration();
+    }
+}
+
+void SoundOfLifeAudioProcessor::setTimerInterval(int timeInMs)
+{
+    startTimer(timeInMs);
 }
