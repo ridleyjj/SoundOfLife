@@ -24,7 +24,7 @@ namespace jr
             auto row = new CellButtonArray();
             for (int i{}; i < rowSize; i++)
             {
-                row->push_back(new CellButton());
+                row->push_back(new CellButton(rowNum, i, *this));
                 row->at(i)->setIsAlive(lifeGridService.getCell(rowNum, i)->getIsAlive());
                 addAndMakeVisible(row->at(i));
             }
@@ -43,6 +43,13 @@ namespace jr
             }
             delete cellGrid.at(rowNum);
         }
+    }
+
+    void LifeGridGUI::onCellClick(int m, int n)
+    {
+        lifeGridService.getCell(m, n)->toggleAlive();
+        cellGrid.at(m)->at(n)->setIsAlive(lifeGridService.getCell(m, n)->getIsAlive());
+        repaint();
     }
 
     void LifeGridGUI::forEachCell(std::function<void(CellButton*, int, int)> callBack)

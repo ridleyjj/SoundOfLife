@@ -19,7 +19,7 @@ using CellButton2DGrid = std::vector<CellButtonArray*>;
 
 namespace jr
 {
-    class LifeGridGUI : public juce::Component, public LifeGridServiceListener
+    class LifeGridGUI : public juce::Component, public LifeGridServiceListener, public CellButtonListener
     {
         public:
             LifeGridGUI(LifeGridService& _service);
@@ -28,6 +28,8 @@ namespace jr
             void resized() override;
 
             void onServiceStateChange() override;
+
+            void onCellClick(int m, int n) override;
 
         private:
             LifeGridService& lifeGridService;

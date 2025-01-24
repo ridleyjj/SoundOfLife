@@ -13,17 +13,25 @@
 
 namespace jr
 {
+    class CellButtonListener
+    {
+    public:
+        virtual void onCellClick(int m, int n) = 0;
+    };
+
     class CellButton : public juce::Component
     {
         public:
-            CellButton()
+            CellButton(int _rowPos, int _columnPos, CellButtonListener& l) : listener(l)
             {
+                row = _rowPos;
+                column= _columnPos;
                 setMouseCursor(juce::MouseCursor::PointingHandCursor);
             }
 
             void mouseUp(const juce::MouseEvent& event) override
             {
-                toggleAlive();
+                listener.onCellClick(row, column);
             }
 
             void toggleAlive()
@@ -50,5 +58,8 @@ namespace jr
         private:
             bool isAlive{ false };
             bool nextValue{ false };
+            int row{};
+            int column{};
+            CellButtonListener& listener;
     };
 }
