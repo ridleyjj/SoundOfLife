@@ -19,6 +19,11 @@ using CellButton2DGrid = std::vector<CellButtonArray*>;
 
 namespace jr
 {
+    class LifeGridGUIListener
+    {
+        virtual void onLifeGridStateChange() = 0;
+    };
+
     class LifeGridGUI : public juce::Component, public LifeGridServiceListener, public CellButtonListener
     {
         public:
