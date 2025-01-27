@@ -1,5 +1,6 @@
 #pragma once
 #include "LifeGridGUI.h"
+#include <JuceHeader.h>
 
 
 namespace jr
@@ -7,28 +8,27 @@ namespace jr
 	class LifeGridAttachment : public LifeGridGUIListener
 	{
 		public:
-			LifeGridAttachment();
+			/*
+			params is a reference to the group of AudioParameterBools which are a flattened 1D array of all of the cells in the grid
+			*/
+			LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorParameterGroup& params, juce::UndoManager* undoManager = nullptr);
+
+			~LifeGridAttachment();
 
 			/*
 			Update LifeGridService based on new GUI state
 			*/
-			void onLifeGridStateChange() override;
+			void onLifeGridCellClicked(int m, int n, bool isAlive) override;
 
 		private:
-			// 2D array of juce::ParameterAttachment objects? One for each cell
+			// 1D array of juce::ParameterAttachment objects? One for each cell
+			std::vector<std::shared_ptr<juce::ParameterAttachment>> paramAttachments{};
 
 			LifeGridGUI& lifeGrid;
 			
 			/*
-			Update cell function to be passed to each parameter attachment
+			Returns update cell function to be passed to each parameter attachment. Update cell is calculated 
 			*/
-			std::function<void(bool)> getUpdateCellMethod(int m, int n)
-			{
-				return [&](bool newValue)
-					{
-						// use m and n to identify with cell to update 
-						return;
-					};
-			};
+			std::function<void(float)> getUpdateCellMethod(int m, int n);
 	};
 }

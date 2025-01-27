@@ -21,7 +21,8 @@ namespace jr
 {
     class LifeGridGUIListener
     {
-        virtual void onLifeGridStateChange() = 0;
+        public:
+            virtual void onLifeGridCellClicked(int m, int n, bool isAlive) = 0;
     };
 
     class LifeGridGUI : public juce::Component, public LifeGridServiceListener, public CellButtonListener
@@ -36,13 +37,27 @@ namespace jr
 
             void onCellClick(int m, int n) override;
 
+            void updateCellIsAlive(int m, int n, bool isAlive);
+
+            void addListener(LifeGridGUIListener* l) { listeners.push_back(std::shared_ptr<LifeGridGUIListener>(l)); }
+
+            void removeListener(LifeGridGUIListener* l);
+
+            int getNumRows() { return numRows; }
+            
+            int getRowSize() { return rowSize; }
+
         private:
             LifeGridService& lifeGridService;
 
             void forEachCell(std::function<void(CellButton*, int, int)> callback);
 
+            void notifyListenersOnCellClicked(int m, int n, bool isAlive);
+
             CellButton2DGrid cellGrid;
             int rowSize{};
             int numRows{};
+
+            std::vector<std::shared_ptr<LifeGridGUIListener>> listeners;
     };
 }

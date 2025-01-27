@@ -47,8 +47,13 @@ namespace jr
 
     void LifeGridGUI::onCellClick(int m, int n)
     {
+        // old method - updating directly through service reference
         lifeGridService.getCell(m, n)->toggleAlive();
         cellGrid.at(m)->at(n)->setIsAlive(lifeGridService.getCell(m, n)->getIsAlive());
+
+        // new method - updating parameter attachment to send update via APVTS
+        notifyListenersOnCellClicked(m, n, !lifeGridService.getCell(m, n)->getIsAlive());
+        
         repaint();
     }
 
@@ -92,5 +97,34 @@ namespace jr
             };
         forEachCell(updateCellValue);
         repaint();
+    }
+
+    void LifeGridGUI::updateCellIsAlive(int m, int n, bool isAlive)
+    {
+        jassert(m > 0 && m < numRows);
+        jassert(n > 0 && n < rowSize);
+
+        cellGrid.at(m)->at(n)->setIsAlive(isAlive);
+        repaint();
+    }
+
+    void LifeGridGUI::removeListener(LifeGridGUIListener* l)
+    {
+        for (int i{}; i < listeners.size(); i++)
+        {
+            if (l == listeners.at(i).get())
+            {
+                listeners.erase(listeners.begin() + i);
+                return;
+            }
+        }
+    }
+
+    void LifeGridGUI::notifyListenersOnCellClicked(int m, int n, bool isAlive)
+    {
+        for (int i{}; i < listeners.size(); i++)
+        {
+            listeners.at(i)->onLifeGridCellClicked();
+        }
     }
 }
