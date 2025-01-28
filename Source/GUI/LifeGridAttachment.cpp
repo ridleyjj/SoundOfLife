@@ -1,18 +1,19 @@
 #include "LifeGridAttachment.h"
+#include "../PluginProcessor.h"
 
 namespace jr
 {
-	LifeGridAttachment::LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorParameterGroup& paramGroup, juce::UndoManager* undoManager) : lifeGrid(l)
+	LifeGridAttachment::LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorValueTreeState& params, juce::UndoManager* undoManager) : lifeGrid(l)
 	{
 		int numRows = lifeGrid.getNumRows();
 		int rowSize = lifeGrid.getRowSize();
-		auto params = paramGroup.getParameters(false);
 		int m{};
 		int n{};
 
-		for (int i{}; i < params.size(); i++)
+		for (int i{}; i < numRows * rowSize; i++)
 		{
-			paramAttachments.push_back(std::make_shared<juce::ParameterAttachment>(params[i], getUpdateCellMethod(m, n), undoManager));
+			auto param = params.getParameter(ID::getCellId(i));
+			paramAttachments.push_back(std::make_shared<juce::ParameterAttachment>(param, getUpdateCellMethod(m, n), undoManager));
 			paramAttachments.at(i)->sendInitialUpdate();
 
 			if (n++ >= rowSize)

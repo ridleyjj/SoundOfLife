@@ -10,6 +10,15 @@
 
 #include <JuceHeader.h>
 #include "Service/LifeGridService.h"
+#include "Service/ApvtsListener.h";
+
+namespace ID
+{
+    juce::String const getCellId(int index)
+    {
+        return "CELL_" + juce::String{ index };
+    }
+}
 
 //==============================================================================
 /**
@@ -63,12 +72,23 @@ public:
     void toggleTimer() { timerOn = !timerOn; }
     int getTimerIntervalMs() { return timerIntervalMs; }
 
+    //==============================================================================
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
+
 private:
 
     jr::LifeGridService lifeGridService;
 
     bool timerOn{ false };
     int timerIntervalMs{ 1000 };
+
+    juce::AudioProcessorValueTreeState apvts;
+    std::vector<std::unique_ptr<jr::ApvtsListener>> paramListeners{};
+
+    void addListenersToApvts();
+    void removeListenersFromApvts();
+    std::function<void(bool)> getListenerCallbackForCell(int cellIndex);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)

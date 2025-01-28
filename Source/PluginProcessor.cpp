@@ -19,14 +19,18 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+    apvts(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
     startTimer(timerIntervalMs);
+
+    addListenersToApvts();
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
+    removeListenersFromApvts();
 }
 
 //==============================================================================
@@ -203,4 +207,53 @@ void SoundOfLifeAudioProcessor::timerCallback()
 void SoundOfLifeAudioProcessor::setTimerInterval(int timeInMs)
 {
     startTimer(timeInMs);
+}
+
+//==============================================================================
+juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::createParameterLayout()
+{
+    int numCells = lifeGridService.numRows * lifeGridService.rowSize;
+
+    juce::AudioProcessorValueTreeState::ParameterLayout layout{};
+
+    for (int i{}; i < numCells; i++)
+    {
+        const juce::String cellId = ID::getCellId(i);
+        layout.add(std::make_unique<juce::AudioParameterBool>(cellId, cellId, false));
+    }
+    
+    return layout;
+}
+
+std::function<void(bool)> SoundOfLifeAudioProcessor::getListenerCallbackForCell(int cellIndex)
+{
+    int m = static_cast<int> (cellIndex / lifeGridService.getRowSize());
+    int n = cellIndex % lifeGridService.getRowSize();
+
+    return [&](bool newValue)
+        {
+            lifeGridService.getCell(m, n)->setNextValue(newValue);
+            lifeGridService.getCell(m, n)->triggerGeneration();
+        };
+}
+
+void SoundOfLifeAudioProcessor::addListenersToApvts()
+{
+    int numCells = lifeGridService.numRows * lifeGridService.rowSize;
+
+    for (int i{}; i < numCells; i++)
+    {
+        paramListeners.push_back(std::make_unique<jr::ApvtsListener>(getListenerCallbackForCell(i)));
+        apvts.addParameterListener(ID::getCellId(i), paramListeners.at(i).get());
+    }
+}
+
+void SoundOfLifeAudioProcessor::removeListenersFromApvts()
+{
+    int numCells = lifeGridService.numRows * lifeGridService.rowSize;
+
+    for (int i{}; i < numCells; i++)
+    {
+        apvts.removeParameterListener(ID::getCellId(i), paramListeners.at(i).get());
+    }
 }

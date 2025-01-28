@@ -11,7 +11,12 @@ namespace jr
 			/*
 			params is a reference to the group of AudioParameterBools which are a flattened 1D array of all of the cells in the grid
 			*/
-			LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorParameterGroup& params, juce::UndoManager* undoManager = nullptr);
+			LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorValueTreeState& params) : lifeGrid(l) { LifeGridAttachment(l, params, nullptr); }
+
+			/*
+			params is a reference to the group of AudioParameterBools which are a flattened 1D array of all of the cells in the grid
+			*/
+			LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorValueTreeState& params, juce::UndoManager* undoManager);
 
 			~LifeGridAttachment();
 

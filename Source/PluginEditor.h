@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "GUI/LifeGridGUI.h"
+#include "GUI/LifeGridAttachment.h"
 
 //==============================================================================
 /**
@@ -33,6 +34,7 @@ private:
     SoundOfLifeAudioProcessor& audioProcessor;
 
     std::shared_ptr<jr::LifeGridGUI> lifeGrid;
+    std::unique_ptr<jr::LifeGridAttachment> gridAttachment;
 
     juce::TextButton nextButton{ "Next Generation" };
     juce::TextButton randomButton{ "Randomise" };

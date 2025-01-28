@@ -49,6 +49,9 @@ namespace jr
 			LifeGridService();
 			~LifeGridService();
 
+            static const int numRows;
+            static const int rowSize;
+
             void nextGeneration();
 
             void randomiseSetup();
@@ -70,8 +73,8 @@ namespace jr
             void forEachCell(std::function<void(LifeCell*, int, int)> callback);
 
             Cell2DGrid cellGrid;
-            const int rowSize{ 9 };
-            const int numRows = 9;
+            //const int rowSize{ 9 };
+            //const int numRows = 9;
 
             juce::Random random{};
 

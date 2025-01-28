@@ -2,6 +2,9 @@
 
 namespace jr
 {
+	const int LifeGridService::numRows{ 9 };
+	const int LifeGridService::rowSize{ 9 };
+
 	LifeGridService::LifeGridService()
 	{
 		// populate grid with cells
@@ -44,7 +47,7 @@ namespace jr
 		forEachCell(calcNextValue);
 		forEachCell(triggerChange);
 		
-		notifyListeners();
+		//notifyListeners();
 	}
 
 	void LifeGridService::randomiseSetup()
@@ -56,7 +59,7 @@ namespace jr
 			};
 		forEachCell(chooseRandomState);
 
-		notifyListeners();
+		//notifyListeners();
 	}
 
 	bool LifeGridService::getCellNextGeneration(bool isAlive, int m, int n)
