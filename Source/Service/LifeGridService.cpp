@@ -37,15 +37,16 @@ namespace jr
 		auto calcNextValue = [&](LifeCell* cell, int i, int j)
 			{
 				bool isAlive = cell->getIsAlive();
-				cell->setNextValue(getCellNextGeneration(isAlive, i, j));
-			};
-		auto triggerChange = [](LifeCell* cell, int, int)
-			{
-				cell->triggerGeneration();
+				bool isAliveNextGen = getCellNextGeneration(isAlive, i, j);
+
+				// only need to update APVTS if cell state changes
+				if (isAlive != isAliveNextGen)
+				{
+					notifyListeners(i * rowSize + j, isAliveNextGen);
+				}
 			};
 
 		forEachCell(calcNextValue);
-		forEachCell(triggerChange);
 		
 		//notifyListeners();
 	}
@@ -132,11 +133,11 @@ namespace jr
 		}
 	}
 
-	void LifeGridService::notifyListeners()
+	void LifeGridService::notifyListeners(int cellIndex, bool isAlive)
 	{
 		for (int i{}; i < listeners.size(); i++)
 		{
-			listeners.at(i)->onServiceStateChange();
+			listeners.at(i)->updateCellParam(cellIndex, isAlive);
 		}
 	}
 }

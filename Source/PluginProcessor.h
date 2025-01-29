@@ -14,16 +14,13 @@
 
 namespace ID
 {
-    juce::String const getCellId(int index)
-    {
-        return "CELL_" + juce::String{ index };
-    }
+    juce::String getCellId(int index);
 }
 
 //==============================================================================
 /**
 */
-class SoundOfLifeAudioProcessor  : public juce::AudioProcessor, public juce::Timer
+class SoundOfLifeAudioProcessor  : public juce::AudioProcessor, public juce::Timer, public jr::LifeGridServiceListener
 {
 public:
     //==============================================================================
@@ -75,6 +72,9 @@ public:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
+
+    //==============================================================================
+    void updateCellParam(int cellIndex, bool isAlive) override;
 
 private:
 

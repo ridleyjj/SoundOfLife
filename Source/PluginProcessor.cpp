@@ -9,6 +9,14 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+namespace ID
+{
+    juce::String getCellId(int index)
+    {
+        return "CELL_" + juce::String{ index };
+    }
+}
+
 //==============================================================================
 SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -26,11 +34,14 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
     startTimer(timerIntervalMs);
 
     addListenersToApvts();
+
+    lifeGridService.addListener(std::shared_ptr<LifeGridServiceListener>(this));
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
     removeListenersFromApvts();
+    lifeGridService.removeListener(std::shared_ptr<LifeGridServiceListener>(this));
 }
 
 //==============================================================================
@@ -230,7 +241,7 @@ std::function<void(bool)> SoundOfLifeAudioProcessor::getListenerCallbackForCell(
     int m = static_cast<int> (cellIndex / lifeGridService.getRowSize());
     int n = cellIndex % lifeGridService.getRowSize();
 
-    return [&](bool newValue)
+    return [=](bool newValue)
         {
             lifeGridService.getCell(m, n)->setNextValue(newValue);
             lifeGridService.getCell(m, n)->triggerGeneration();
@@ -256,4 +267,10 @@ void SoundOfLifeAudioProcessor::removeListenersFromApvts()
     {
         apvts.removeParameterListener(ID::getCellId(i), paramListeners.at(i).get());
     }
+}
+
+//==============================================================================
+void SoundOfLifeAudioProcessor::updateCellParam(int cellIndex, bool isAlive)
+{
+    apvts.getParameter(ID::getCellId(cellIndex))->setValue(isAlive ? 1.0f : 0.0f);
 }

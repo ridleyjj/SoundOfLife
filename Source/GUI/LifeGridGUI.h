@@ -25,7 +25,7 @@ namespace jr
             virtual void onLifeGridCellClicked(int m, int n, bool isAlive) = 0;
     };
 
-    class LifeGridGUI : public juce::Component, public LifeGridServiceListener, public CellButtonListener
+    class LifeGridGUI : public juce::Component, public CellButtonListener
     {
         public:
             LifeGridGUI(LifeGridService& _service);
@@ -33,11 +33,11 @@ namespace jr
 
             void resized() override;
 
-            void onServiceStateChange() override;
+            //void onServiceStateChange() override;
 
             void onCellClick(int m, int n) override;
 
-            void updateCellIsAlive(int m, int n, bool isAlive);
+            void updateCellIsAlive(CellButton* cell, bool isAlive);
 
             void addListener(LifeGridGUIListener* l) { listeners.push_back(std::shared_ptr<LifeGridGUIListener>(l)); }
 
@@ -46,6 +46,8 @@ namespace jr
             int getNumRows() { return numRows; }
             
             int getRowSize() { return rowSize; }
+
+            jr::CellButton* getCell(int m, int n) { return cellGrid.at(m)->at(n); }
 
         private:
             LifeGridService& lifeGridService;

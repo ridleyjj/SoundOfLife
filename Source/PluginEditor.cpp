@@ -15,7 +15,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     lifeGrid = std::make_shared<jr::LifeGridGUI>(p.getLifeGridService());
-    gridAttachment = std::make_unique<jr::LifeGridAttachment>(lifeGrid, p.getAPVTS());
+    gridAttachment = std::make_unique<jr::LifeGridAttachment>(*lifeGrid, p.getAPVTS());
 
     addAndMakeVisible(*lifeGrid.get());
     addAndMakeVisible(nextButton);
@@ -37,7 +37,6 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 {
-    audioProcessor.getLifeGridService().removeListener(lifeGrid);
 }
 
 //==============================================================================

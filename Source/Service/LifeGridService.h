@@ -7,7 +7,7 @@ namespace jr
     class LifeGridServiceListener
     {
         public:
-            virtual void onServiceStateChange() = 0;
+            virtual void updateCellParam(int cellIndex, bool isAlive) = 0;
     };
 
 
@@ -68,13 +68,11 @@ namespace jr
             bool getCellNextGeneration(bool isAlive, int m, int n);
             int getNumOfAliveNeighbours(int m, int n);
 
-            void notifyListeners();
+            void notifyListeners(int cellIndex, bool isAlive);
 
             void forEachCell(std::function<void(LifeCell*, int, int)> callback);
 
             Cell2DGrid cellGrid;
-            //const int rowSize{ 9 };
-            //const int numRows = 9;
 
             juce::Random random{};
 

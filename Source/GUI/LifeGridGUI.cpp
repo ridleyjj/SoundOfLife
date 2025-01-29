@@ -85,26 +85,25 @@ namespace jr
         }
     }
 
-    void LifeGridGUI::onServiceStateChange()
-    {
-        /*auto updateCellValue = [&](CellButton* cell, int m, int n)
-            {
-                auto serviceCell = lifeGridService.getCell(m, n);
-                if (serviceCell != nullptr)
-                {
-                    cell->setIsAlive(serviceCell->getIsAlive());
-                }
-            };
-        forEachCell(updateCellValue);
-        repaint();*/
-    }
+    //void LifeGridGUI::onServiceStateChange()
+    //{
+    //    /*auto updateCellValue = [&](CellButton* cell, int m, int n)
+    //        {
+    //            auto serviceCell = lifeGridService.getCell(m, n);
+    //            if (serviceCell != nullptr)
+    //            {
+    //                cell->setIsAlive(serviceCell->getIsAlive());
+    //            }
+    //        };
+    //    forEachCell(updateCellValue);
+    //    repaint();*/
+    //}
 
-    void LifeGridGUI::updateCellIsAlive(int m, int n, bool isAlive)
+    void LifeGridGUI::updateCellIsAlive(CellButton* cell, bool isAlive)
     {
-        jassert(m > 0 && m < numRows);
-        jassert(n > 0 && n < rowSize);
+        jassert(cell != nullptr);
 
-        cellGrid.at(m)->at(n)->setIsAlive(isAlive);
+        cell->setIsAlive(isAlive);
         repaint();
     }
 

@@ -3,7 +3,7 @@
 
 namespace jr
 {
-	LifeGridAttachment::LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorValueTreeState& params, juce::UndoManager* undoManager) : lifeGrid(l)
+	LifeGridAttachment::LifeGridAttachment(LifeGridGUI& l, juce::AudioProcessorValueTreeState& params) : lifeGrid(l)
 	{
 		int numRows = lifeGrid.getNumRows();
 		int rowSize = lifeGrid.getRowSize();
@@ -13,10 +13,10 @@ namespace jr
 		for (int i{}; i < numRows * rowSize; i++)
 		{
 			auto param = params.getParameter(ID::getCellId(i));
-			paramAttachments.push_back(std::make_shared<juce::ParameterAttachment>(param, getUpdateCellMethod(m, n), undoManager));
+			paramAttachments.push_back(std::make_shared<juce::ParameterAttachment>(*param, getUpdateCellMethod(m, n)));
 			paramAttachments.at(i)->sendInitialUpdate();
 
-			if (n++ >= rowSize)
+			if (++n >= rowSize)
 			{
 				n = 0;
 				m++;
@@ -44,10 +44,11 @@ namespace jr
 
 	std::function<void(float)> LifeGridAttachment::getUpdateCellMethod(int m, int n)
 	{
-		return [&](float newValue)
+		CellButton* cell = lifeGrid.getCell(m, n);
+		return [=](float newValue)
 			{
 				bool isAlive = newValue > 0.1f;
-				lifeGrid.updateCellIsAlive(m, n, isAlive);
+				lifeGrid.updateCellIsAlive(cell, isAlive);
 			};
 	}
 }
