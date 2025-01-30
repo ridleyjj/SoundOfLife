@@ -270,7 +270,9 @@ void SoundOfLifeAudioProcessor::removeListenersFromApvts()
 }
 
 //==============================================================================
-void SoundOfLifeAudioProcessor::updateCellParam(int cellIndex, bool isAlive)
+void SoundOfLifeAudioProcessor::updateCellParam(int cellIndex)
 {
-    apvts.getParameter(ID::getCellId(cellIndex))->setValue(isAlive ? 1.0f : 0.0f);
+    auto param = apvts.getParameter(ID::getCellId(cellIndex));
+    bool isAlive = param->getValue() > 0.1f;
+   param->setValueNotifyingHost(isAlive ? 0.0f : 1.0f); // flips the alive state so that the cells value changes
 }

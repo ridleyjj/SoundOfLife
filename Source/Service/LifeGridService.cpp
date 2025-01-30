@@ -34,6 +34,8 @@ namespace jr
 
 	void LifeGridService::nextGeneration()
 	{
+		changedCells.clear();
+
 		auto calcNextValue = [&](LifeCell* cell, int i, int j)
 			{
 				bool isAlive = cell->getIsAlive();
@@ -42,25 +44,30 @@ namespace jr
 				// only need to update APVTS if cell state changes
 				if (isAlive != isAliveNextGen)
 				{
-					notifyListeners(i * rowSize + j, isAliveNextGen);
+					changedCells.push_back(i * rowSize + j);
 				}
 			};
 
 		forEachCell(calcNextValue);
-		
-		//notifyListeners();
+		notifyListeners(); // listeners need to be notified after new values have all been calculated so that the new values do not interfere with calculations
 	}
 
 	void LifeGridService::randomiseSetup()
 	{
-		auto chooseRandomState = [&](LifeCell* cell, int, int)
+		changedCells.clear();
+
+		auto chooseRandomState = [&](LifeCell* cell, int i, int j)
 			{
-				cell->setNextValue(random.nextBool());
-				cell->triggerGeneration();
+				bool isAlive = cell->getIsAlive();
+				bool isAliveNextGen = random.nextBool();
+				if (isAlive != isAliveNextGen)
+				{
+					changedCells.push_back(i * rowSize + j);
+				}
 			};
 		forEachCell(chooseRandomState);
 
-		//notifyListeners();
+		notifyListeners();
 	}
 
 	bool LifeGridService::getCellNextGeneration(bool isAlive, int m, int n)
@@ -133,11 +140,15 @@ namespace jr
 		}
 	}
 
-	void LifeGridService::notifyListeners(int cellIndex, bool isAlive)
+	void LifeGridService::notifyListeners()
 	{
 		for (int i{}; i < listeners.size(); i++)
 		{
-			listeners.at(i)->updateCellParam(cellIndex, isAlive);
+			for (int cellIndex : changedCells)
+			{
+				listeners.at(i)->updateCellParam(cellIndex);
+			}
 		}
+		changedCells.clear();
 	}
 }

@@ -33,8 +33,6 @@ namespace jr
 
             void resized() override;
 
-            //void onServiceStateChange() override;
-
             void onCellClick(int m, int n) override;
 
             void updateCellIsAlive(CellButton* cell, bool isAlive);

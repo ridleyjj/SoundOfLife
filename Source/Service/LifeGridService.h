@@ -7,7 +7,7 @@ namespace jr
     class LifeGridServiceListener
     {
         public:
-            virtual void updateCellParam(int cellIndex, bool isAlive) = 0;
+            virtual void updateCellParam(int cellIndex) = 0;
     };
 
 
@@ -68,11 +68,15 @@ namespace jr
             bool getCellNextGeneration(bool isAlive, int m, int n);
             int getNumOfAliveNeighbours(int m, int n);
 
-            void notifyListeners(int cellIndex, bool isAlive);
+            /*
+            Uses changedCells vector to update listeners of all cells that have changed in current gesture
+            */
+            void notifyListeners();
 
             void forEachCell(std::function<void(LifeCell*, int, int)> callback);
 
             Cell2DGrid cellGrid;
+            std::vector<int> changedCells{};
 
             juce::Random random{};
 

@@ -18,7 +18,6 @@ namespace jr
 			void onLifeGridCellClicked(int m, int n, bool isAlive) override;
 
 		private:
-			// 1D array of juce::ParameterAttachment objects? One for each cell
 			std::vector<std::shared_ptr<juce::ParameterAttachment>> paramAttachments{};
 
 			LifeGridGUI& lifeGrid;
