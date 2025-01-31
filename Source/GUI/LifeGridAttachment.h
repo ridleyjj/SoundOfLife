@@ -18,13 +18,13 @@ namespace jr
 			void onLifeGridCellClicked(int m, int n, bool isAlive) override;
 
 		private:
-			std::vector<std::shared_ptr<juce::ParameterAttachment>> paramAttachments{};
-
-			LifeGridGUI& lifeGrid;
-			
 			/*
 			Returns update cell function to be passed to each parameter attachment. Update cell is calculated 
 			*/
 			std::function<void(float)> getUpdateCellMethod(int m, int n);
+
+			std::vector<std::shared_ptr<juce::ParameterAttachment>> paramAttachments{};
+			
+			LifeGridGUI& lifeGrid;
 	};
 }

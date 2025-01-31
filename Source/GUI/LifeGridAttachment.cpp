@@ -38,8 +38,11 @@ namespace jr
 
 	void LifeGridAttachment::onLifeGridCellClicked(int m, int n, bool isAlive)
 	{
-		int i = (lifeGrid.getNumRows() * m) + n;
-		paramAttachments.at(i)->setValueAsCompleteGesture(isAlive ? 1.0f : 0.0f);
+		int i = (lifeGrid.getRowSize() * m) + n;
+		if (paramAttachments.size() > 0)
+		{
+			paramAttachments.at(i)->setValueAsCompleteGesture(isAlive ? 1.0f : 0.0f);
+		}
 	}
 
 	std::function<void(float)> LifeGridAttachment::getUpdateCellMethod(int m, int n)

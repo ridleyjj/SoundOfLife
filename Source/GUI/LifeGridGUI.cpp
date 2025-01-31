@@ -88,14 +88,9 @@ namespace jr
 
     void LifeGridGUI::removeListener(LifeGridGUIListener* l)
     {
-        for (int i{}; i < listeners.size(); i++)
-        {
-            if (l == listeners.at(i).get())
-            {
-                listeners.erase(listeners.begin() + i);
-                return;
-            }
-        }
+        auto iter = std::remove(listeners.begin(), listeners.end(), l); // moves any number of matching values to the end of the vector to be removed
+
+        listeners.erase(iter, listeners.end()); // Efficiently erase removed elements
     }
 
     void LifeGridGUI::notifyListenersOnCellClicked(int m, int n, bool isAlive)

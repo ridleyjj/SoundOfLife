@@ -61,8 +61,8 @@ namespace jr
 
             LifeCell* getCell(int m, int n) { return cellGrid.at(m)->at(n); }
 
-            void addListener(std::shared_ptr<LifeGridServiceListener> gridUI);
-            void removeListener(std::shared_ptr<LifeGridServiceListener> gridUI);
+            void addListener(LifeGridServiceListener* l);
+            void removeListener(LifeGridServiceListener* l);
 
 		private:
             bool getCellNextGeneration(bool isAlive, int m, int n);
@@ -80,6 +80,6 @@ namespace jr
 
             juce::Random random{};
 
-            std::vector <std::shared_ptr< LifeGridServiceListener >> listeners{};
+            std::vector <LifeGridServiceListener*> listeners{};
 	};
 }

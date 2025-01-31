@@ -123,21 +123,15 @@ namespace jr
 		}
 	}
 
-	void LifeGridService::addListener(std::shared_ptr<LifeGridServiceListener> gridUI)
+	void LifeGridService::addListener(LifeGridServiceListener* l)
 	{
-		listeners.push_back(std::shared_ptr<LifeGridServiceListener>(gridUI));
+		listeners.push_back(l);
 	}
 
-	void LifeGridService::removeListener(std::shared_ptr<LifeGridServiceListener> gridUI)
+	void LifeGridService::removeListener(LifeGridServiceListener* l)
 	{
-		for (int i{}; i < listeners.size(); i++)
-		{
-			if (listeners.at(i).get() == gridUI.get())
-			{
-				listeners.erase(listeners.begin() + i);
-				return;
-			}
-		}
+		auto iter = std::remove(listeners.begin(), listeners.end(), l);
+		listeners.erase(iter, listeners.end());
 	}
 
 	void LifeGridService::notifyListeners()

@@ -37,7 +37,7 @@ namespace jr
 
             void updateCellIsAlive(CellButton* cell, bool isAlive);
 
-            void addListener(LifeGridGUIListener* l) { listeners.push_back(std::shared_ptr<LifeGridGUIListener>(l)); }
+            void addListener(LifeGridGUIListener* l) { listeners.push_back(l); }
 
             void removeListener(LifeGridGUIListener* l);
 
@@ -58,6 +58,6 @@ namespace jr
             int rowSize{};
             int numRows{};
 
-            std::vector<std::shared_ptr<LifeGridGUIListener>> listeners;
+            std::vector<LifeGridGUIListener*> listeners;
     };
 }

@@ -35,13 +35,13 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
 
     addListenersToApvts();
 
-    lifeGridService.addListener(std::shared_ptr<LifeGridServiceListener>(this));
+    lifeGridService.addListener(this);
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
     removeListenersFromApvts();
-    lifeGridService.removeListener(std::shared_ptr<LifeGridServiceListener>(this));
+    lifeGridService.removeListener(this);
 }
 
 //==============================================================================
