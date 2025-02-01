@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "GUI/LifeGridGUI.h"
 #include "GUI/LifeGridAttachment.h"
+#include "GUI/jr_PresetPanel.h"
 
 //==============================================================================
 /**
@@ -32,6 +33,8 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SoundOfLifeAudioProcessor& audioProcessor;
+
+    jr::PresetPanel presetPanel;
 
     std::shared_ptr<jr::LifeGridGUI> lifeGrid;
     std::unique_ptr<jr::LifeGridAttachment> gridAttachment;

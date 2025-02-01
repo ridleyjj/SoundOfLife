@@ -6,6 +6,10 @@
     <GROUP id="{30FD4B2E-4851-16D1-E88C-26ACDA8483E3}" name="Source">
       <GROUP id="{179C32D5-FD63-3D3D-FEC6-E101D2987E39}" name="Service">
         <FILE id="ZDv9n3" name="ApvtsListener.h" compile="0" resource="0" file="Source/Service/ApvtsListener.h"/>
+        <FILE id="MRtgkB" name="jr_PresetManager_Service.cpp" compile="1" resource="0"
+              file="Source/Service/jr_PresetManager_Service.cpp"/>
+        <FILE id="TBaMUR" name="jr_PresetManager_Service.h" compile="0" resource="0"
+              file="Source/Service/jr_PresetManager_Service.h"/>
         <FILE id="MieT6N" name="LifeGridService.cpp" compile="1" resource="0"
               file="Source/Service/LifeGridService.cpp"/>
         <FILE id="mtbIfY" name="LifeGridService.h" compile="0" resource="0"
@@ -16,6 +20,8 @@
       </GROUP>
       <GROUP id="{F31B553D-D90A-C39E-2F6F-EAA4A7321B90}" name="GUI">
         <FILE id="IzDE6C" name="CellButton.h" compile="0" resource="0" file="Source/GUI/CellButton.h"/>
+        <FILE id="Ik86Sh" name="jr_PresetPanel.h" compile="0" resource="0"
+              file="Source/GUI/jr_PresetPanel.h"/>
         <FILE id="jcGQTk" name="LifeGridAttachment.cpp" compile="1" resource="0"
               file="Source/GUI/LifeGridAttachment.cpp"/>
         <FILE id="uZ2kg3" name="LifeGridAttachment.h" compile="0" resource="0"

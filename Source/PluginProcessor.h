@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "Service/LifeGridService.h"
 #include "Service/ApvtsListener.h";
+#include "Service/jr_PresetManager_Service.h";
 
 namespace ID
 {
@@ -68,6 +69,7 @@ public:
     void setTimerInterval(int timeInMs);
     void toggleTimer() { timerOn = !timerOn; }
     int getTimerIntervalMs() { return timerIntervalMs; }
+    jr::PresetManager& getPresetManager() { return *presetManager; }
 
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -77,6 +79,8 @@ public:
     void updateCellParam(int cellIndex) override;
 
 private:
+
+    std::unique_ptr<jr::PresetManager> presetManager;
 
     jr::LifeGridService lifeGridService;
 

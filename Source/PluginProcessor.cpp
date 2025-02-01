@@ -31,11 +31,13 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
     apvts(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
-    startTimer(timerIntervalMs);
+    presetManager = std::make_unique<jr::PresetManager>(apvts);
 
     addListenersToApvts();
 
     lifeGridService.addListener(this);
+    
+    startTimer(timerIntervalMs);
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
