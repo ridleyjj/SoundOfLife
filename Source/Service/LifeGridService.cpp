@@ -90,21 +90,34 @@ namespace jr
 	int LifeGridService::getNumOfAliveNeighbours(int m, int n)
 	{
 		int numNeighbours{ 0 };
+		auto wrapInt = [](int value, int max)
+			{
+				if (value < 0)
+				{
+					value = max + value;
+				}
+				else if (value >= max)
+				{
+					value = value - max;
+				}
+				return value;
+			};
+
+		// if neighbours go 'off-grid' assume that they wrap around the grid.
+		// i.e. if possible co-ords are from 0-8, -1 becomes 8 and 9 becomes 0
 
 		for (int i{ m - 1 }; i < m + 2; i++)
 		{
-			if (i >= 0 && i < numRows)
-			{
-				for (int j{ n - 1 }; j < n + 2; j++)
-				{
-					if (j >= 0 && j < rowSize)
-					{
-						if (i == m && j == n) // don't count self as neighbour
-							continue;
+			int row = wrapInt(i, numRows); // don't reassign i as that would mess up the loop!
 
-						if (cellGrid.at(i)->at(j)->getIsAlive()) numNeighbours++;
-					}
-				}
+			for (int j{ n - 1 }; j < n + 2; j++)
+			{
+				int column = wrapInt(j, rowSize);
+
+				if (row == m && column == n) // don't count self as neighbour
+					continue;
+
+				if (cellGrid.at(row)->at(column)->getIsAlive()) numNeighbours++;
 			}
 		}
 
