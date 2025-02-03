@@ -76,7 +76,7 @@ public:
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
 
     //==============================================================================
-    void updateCellParam(int cellIndex) override;
+    void updateCellParam(std::vector<int> const& cellIndexes) override;
 
 private:
 

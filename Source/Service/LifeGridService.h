@@ -7,7 +7,7 @@ namespace jr
     class LifeGridServiceListener
     {
         public:
-            virtual void updateCellParam(int cellIndex) = 0;
+            virtual void updateCellParam(std::vector<int> const & cellIndexes) = 0;
     };
 
 

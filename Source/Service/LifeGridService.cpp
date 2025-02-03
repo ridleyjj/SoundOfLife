@@ -151,10 +151,12 @@ namespace jr
 	{
 		for (int i{}; i < listeners.size(); i++)
 		{
-			for (int cellIndex : changedCells)
+			listeners.at(i)->updateCellParam(changedCells);
+
+			/*for (int cellIndex : changedCells)
 			{
 				listeners.at(i)->updateCellParam(cellIndex);
-			}
+			}*/
 		}
 		changedCells.clear();
 	}
