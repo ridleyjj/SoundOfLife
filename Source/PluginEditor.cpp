@@ -21,12 +21,13 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(nextButton);
     addAndMakeVisible(timerButton);
     addAndMakeVisible(randomButton);
+    addAndMakeVisible(blinker);
 
     jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Timer Frequency (ms)", 250, 2000, 1, true);
     frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
     frequencySlider.addListener(this);
 
-    timerButton.onClick = [&]() { p.toggleTimer(); };
+    timerButton.onClick = [&]() { p.toggleTimer(); toggleBlinker(); };
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
 
@@ -58,7 +59,9 @@ void SoundOfLifeAudioProcessorEditor::resized()
     nextButton.setBounds(firstButtonSection.removeFromTop(topRow.proportionOfHeight(0.5f)).reduced(4));
     randomButton.setBounds(firstButtonSection.reduced(4));
 
-    timerButton.setBounds(topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(15, 5));
+    auto timerSection = topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(15, 5);
+    timerButton.setBounds(timerSection.removeFromLeft(timerSection.proportionOfWidth(0.5f)));
+    blinker.setBounds(timerSection.reduced(16, 4));
     frequencySlider.setBounds(topRow.reduced(4, 24));
 
     lifeGrid->setBounds(contentContainer);
@@ -71,5 +74,21 @@ void SoundOfLifeAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
     if (slider == &frequencySlider)
     {
         audioProcessor.setTimerInterval(frequencySlider.getValue());
+        if (audioProcessor.getIsTimerOn())
+        {
+            blinker.startBlink(frequencySlider.getValue());
+        }
+    }
+}
+
+void SoundOfLifeAudioProcessorEditor::toggleBlinker()
+{
+    if (audioProcessor.getIsTimerOn())
+    {
+        blinker.startBlink(audioProcessor.getTimerIntervalMs());
+    }
+    else
+    {
+        blinker.stopBlink();
     }
 }

@@ -225,7 +225,8 @@ void SoundOfLifeAudioProcessor::timerCallback()
 
 void SoundOfLifeAudioProcessor::setTimerInterval(int timeInMs)
 {
-    startTimer(timeInMs);
+    timerIntervalMs = timeInMs;
+    startTimer(timerIntervalMs);
 }
 
 //==============================================================================

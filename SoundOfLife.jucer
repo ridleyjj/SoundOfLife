@@ -19,6 +19,7 @@
         <FILE id="J7w3LG" name="jr_JuceUtils.h" compile="0" resource="0" file="Source/Utils/jr_JuceUtils.h"/>
       </GROUP>
       <GROUP id="{F31B553D-D90A-C39E-2F6F-EAA4A7321B90}" name="GUI">
+        <FILE id="HzVPDQ" name="Blinker.h" compile="0" resource="0" file="Source/GUI/Blinker.h"/>
         <FILE id="IzDE6C" name="CellButton.h" compile="0" resource="0" file="Source/GUI/CellButton.h"/>
         <FILE id="Ik86Sh" name="jr_PresetPanel.h" compile="0" resource="0"
               file="Source/GUI/jr_PresetPanel.h"/>

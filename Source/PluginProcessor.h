@@ -70,6 +70,7 @@ public:
     void toggleTimer() { timerOn = !timerOn; }
     int getTimerIntervalMs() { return timerIntervalMs; }
     jr::PresetManager& getPresetManager() { return *presetManager; }
+    bool getIsTimerOn() { return timerOn; }
 
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
