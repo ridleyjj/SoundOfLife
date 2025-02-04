@@ -14,11 +14,12 @@
 #include "GUI/LifeGridAttachment.h"
 #include "GUI/jr_PresetPanel.h"
 #include "GUI/Blinker.h"
+#include "Service/jr_TimerListener.h"
 
 //==============================================================================
 /**
 */
-class SoundOfLifeAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener
+class SoundOfLifeAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener, public jr::TimerListener
 {
 public:
     SoundOfLifeAudioProcessorEditor (SoundOfLifeAudioProcessor&);
@@ -30,7 +31,7 @@ public:
 
     void sliderValueChanged(juce::Slider* slider) override;
 
-    void toggleBlinker();
+    void onTimerBeat() override;
 
 private:
     // This reference is provided as a quick way for your editor to

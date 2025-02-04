@@ -10,7 +10,7 @@ namespace jr
 			~Blinker() {}
 
 			/*
-			Starts the blinker blinking. timeInMs is the time for one full period of the blink, i.e. time for on and off to clycle once
+			Tells the blinker to blink once. timeInMs is the time for one full period of the blink, i.e. time for on and off to cycle once
 			*/
 			void startBlink(int timeInMs)
 			{
@@ -37,13 +37,14 @@ namespace jr
 					g.setColour(juce::Colours::black);
 				}
 
-				g.fillAll();
+				auto diameter = juce::jmin<float>(getHeight(), getWidth());
+
+				g.fillEllipse(juce::Rectangle<float>(diameter, diameter));
 			}
 
 			void timerCallback() override
 			{
-				blink = !blink;
-				repaint();
+				stopBlink();
 			}
 
 		private:

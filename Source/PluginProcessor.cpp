@@ -220,6 +220,10 @@ void SoundOfLifeAudioProcessor::timerCallback()
     if (timerOn)
     {
         lifeGridService.nextGeneration();
+        for (auto listener : timerListeners)
+        {
+            listener->onTimerBeat();
+        }
     }
 }
 
@@ -287,4 +291,11 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
         bool isAlive = param->getValue() > 0.1f;
         param->setValueNotifyingHost(isAlive ? 0.0f : 1.0f); // flips the alive state so that the cells value changes
     }
+}
+
+//==============================================================================
+void SoundOfLifeAudioProcessor::removeTimerListener(jr::TimerListener* l)
+{
+    auto iter = std::remove(timerListeners.begin(), timerListeners.end(), l);
+    timerListeners.erase(iter, timerListeners.end());
 }

@@ -27,17 +27,20 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
     frequencySlider.addListener(this);
 
-    timerButton.onClick = [&]() { p.toggleTimer(); toggleBlinker(); };
+    timerButton.onClick = [&]() { p.toggleTimer(); };
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
 
     addAndMakeVisible(presetPanel);
+
+    p.addTimerListener(this);
 
     setSize (400, 650);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 {
+    audioProcessor.removeTimerListener(this);
 }
 
 //==============================================================================
@@ -60,7 +63,8 @@ void SoundOfLifeAudioProcessorEditor::resized()
     randomButton.setBounds(firstButtonSection.reduced(4));
 
     auto timerSection = topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(15, 5);
-    timerButton.setBounds(timerSection.removeFromLeft(timerSection.proportionOfWidth(0.5f)));
+    timerButton.setBounds(timerSection.removeFromLeft(timerSection.proportionOfWidth(0.75f)));
+    
     blinker.setBounds(timerSection.reduced(16, 4));
     frequencySlider.setBounds(topRow.reduced(4, 24));
 
@@ -74,21 +78,10 @@ void SoundOfLifeAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
     if (slider == &frequencySlider)
     {
         audioProcessor.setTimerInterval(frequencySlider.getValue());
-        if (audioProcessor.getIsTimerOn())
-        {
-            blinker.startBlink(frequencySlider.getValue());
-        }
     }
 }
 
-void SoundOfLifeAudioProcessorEditor::toggleBlinker()
+void SoundOfLifeAudioProcessorEditor::onTimerBeat()
 {
-    if (audioProcessor.getIsTimerOn())
-    {
-        blinker.startBlink(audioProcessor.getTimerIntervalMs());
-    }
-    else
-    {
-        blinker.stopBlink();
-    }
+    blinker.startBlink(audioProcessor.getTimerIntervalMs());
 }

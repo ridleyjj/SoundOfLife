@@ -12,6 +12,7 @@
 #include "Service/LifeGridService.h"
 #include "Service/ApvtsListener.h";
 #include "Service/jr_PresetManager_Service.h";
+#include "Service/jr_TimerListener.h";
 
 namespace ID
 {
@@ -79,6 +80,10 @@ public:
     //==============================================================================
     void updateCellParam(std::vector<int> const& cellIndexes) override;
 
+    //==============================================================================
+    void addTimerListener(jr::TimerListener* l) { timerListeners.push_back(l); }
+    void removeTimerListener(jr::TimerListener* l);
+
 private:
 
     std::unique_ptr<jr::PresetManager> presetManager;
@@ -94,6 +99,8 @@ private:
     void addListenersToApvts();
     void removeListenersFromApvts();
     std::function<void(bool)> getListenerCallbackForCell(int cellIndex);
+
+    std::vector<jr::TimerListener*> timerListeners{};
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)
