@@ -291,6 +291,34 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
         bool isAlive = param->getValue() > 0.1f;
         param->setValueNotifyingHost(isAlive ? 0.0f : 1.0f); // flips the alive state so that the cells value changes
     }
+    processMIDIFromCells(cellIndexes);
+    sendMidiToOutput();
+}
+
+void SoundOfLifeAudioProcessor::processMIDIFromCells(std::vector<int> const& cellIndexes)
+{
+    for (int const cellIndex : cellIndexes)
+    {
+        juce::MidiMessage m = apvts.getRawParameterValue(ID::getCellId(cellIndex))
+            ? getNoteOffFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
+        midiMessagesOut.push_back(m);
+    }
+}
+
+juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
+{
+    return juce::MidiMessage::noteOn(1, getMidiNoteFromCellIndex(cellIndex), 80.0f);
+}
+
+juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
+{
+    return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex) + 23);
+}
+
+void SoundOfLifeAudioProcessor::sendMidiToOutput()
+{
+    // TODO not yet implemented.
+    // sends all messages in the midiMessagesOut vector to MIDI Output device and then clear vector
 }
 
 //==============================================================================
