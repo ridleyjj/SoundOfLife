@@ -297,11 +297,13 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
 
 void SoundOfLifeAudioProcessor::processMIDIFromCells(std::vector<int> const& cellIndexes)
 {
+    double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
     for (int const cellIndex : cellIndexes)
     {
         juce::MidiMessage m = apvts.getRawParameterValue(ID::getCellId(cellIndex))
             ? getNoteOffFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
-        midiMessagesOut.push_back(m);
+        m.setTimeStamp(timestamp);
+        midiOutBuffer.addEvent(m, 0);
     }
 }
 
@@ -317,8 +319,9 @@ juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
 
 void SoundOfLifeAudioProcessor::sendMidiToOutput()
 {
-    // TODO not yet implemented.
-    // sends all messages in the midiMessagesOut vector to MIDI Output device and then clear vector
+    auto outputDevice = juce::MidiOutput::openDevice(juce::MidiOutput::getDefaultDevice().identifier);
+    outputDevice->sendBlockOfMessagesNow(midiOutBuffer);
+    midiOutBuffer.clear();
 }
 
 //==============================================================================

@@ -113,6 +113,7 @@ private:
     std::vector<jr::TimerListener*> timerListeners{};
 
     std::vector<juce::MidiMessage> midiMessagesOut{};
+    juce::MidiBuffer midiOutBuffer{};
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)
