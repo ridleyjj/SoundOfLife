@@ -95,7 +95,10 @@ public:
     void sendMidiToOutput();
 
 private:
+    //=================== methods =======================
+    void selectMidiOutDevice();
 
+    //=================== params ========================
     std::unique_ptr<jr::PresetManager> presetManager;
 
     jr::LifeGridService lifeGridService;
@@ -112,6 +115,8 @@ private:
 
     std::vector<jr::TimerListener*> timerListeners{};
 
+    juce::MidiDeviceListConnection midiDeviceListConnection;
+    std::unique_ptr<juce::MidiOutput> midiOutDevice;
     std::vector<juce::MidiMessage> midiMessagesOut{};
     juce::MidiBuffer midiOutBuffer{};
 

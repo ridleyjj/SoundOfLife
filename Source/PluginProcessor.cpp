@@ -36,6 +36,21 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
     addListenersToApvts();
 
     lifeGridService.addListener(this);
+
+    selectMidiOutDevice();
+    if (midiOutDevice.get() != nullptr)
+    {
+        DBG("Midi Output Device selected:");
+        DBG(midiOutDevice->getName());
+    }
+
+    midiDeviceListConnection = juce::MidiDeviceListConnection::make([&]
+        {
+            // This will print a message when devices are connected/disconnected
+            DBG("MIDI devices changed");
+            selectMidiOutDevice();
+        });
+    
     
     startTimer(timerIntervalMs);
 }
@@ -44,6 +59,7 @@ SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
     removeListenersFromApvts();
     lifeGridService.removeListener(this);
+    midiDeviceListConnection.reset();
 }
 
 //==============================================================================
@@ -295,6 +311,31 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
     sendMidiToOutput();
 }
 
+//==============================================================================
+void SoundOfLifeAudioProcessor::selectMidiOutDevice()
+{
+    // reset midiOut unique_ptr so that it is cleared in case no devices are available
+    if (midiOutDevice) midiOutDevice.reset();
+
+    // try to use MIDI Bus 1 as default
+    for (auto deviceInfo : juce::MidiOutput::getAvailableDevices())
+    {
+        if (deviceInfo.name == "MIDI Bus 1")
+        {
+            midiOutDevice = juce::MidiOutput::openDevice(deviceInfo.identifier);
+            if (midiOutDevice.get() != nullptr) return;
+        }
+    }
+
+    // if default not available, use next one found that is available
+    for (auto deviceInfo : juce::MidiOutput::getAvailableDevices())
+    {
+        midiOutDevice = juce::MidiOutput::openDevice(deviceInfo.identifier);
+
+        if (midiOutDevice.get() != nullptr) break;
+    }
+}
+
 void SoundOfLifeAudioProcessor::processMIDIFromCells(std::vector<int> const& cellIndexes)
 {
     double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
@@ -319,8 +360,15 @@ juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
 
 void SoundOfLifeAudioProcessor::sendMidiToOutput()
 {
-    auto outputDevice = juce::MidiOutput::openDevice(juce::MidiOutput::getDefaultDevice().identifier);
-    outputDevice->sendBlockOfMessagesNow(midiOutBuffer);
+    if (midiOutDevice.get() != nullptr)
+    {
+        auto isRunning = midiOutDevice->isBackgroundThreadRunning();
+        midiOutDevice->sendBlockOfMessagesNow(midiOutBuffer);
+    }
+    else
+    {
+        DBG("Unable to send MIDI messages as no MIDI Output Device is available");
+    }
     midiOutBuffer.clear();
 }
 
