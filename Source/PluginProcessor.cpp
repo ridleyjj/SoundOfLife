@@ -36,21 +36,6 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
     addListenersToApvts();
 
     lifeGridService.addListener(this);
-
-    selectMidiOutDevice();
-    if (midiOutDevice.get() != nullptr)
-    {
-        DBG("Midi Output Device selected:");
-        DBG(midiOutDevice->getName());
-    }
-
-    midiDeviceListConnection = juce::MidiDeviceListConnection::make([&]
-        {
-            // This will print a message when devices are connected/disconnected
-            DBG("MIDI devices changed");
-            selectMidiOutDevice();
-        });
-    
     
     startTimer(timerIntervalMs);
 }
@@ -59,7 +44,6 @@ SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
     removeListenersFromApvts();
     lifeGridService.removeListener(this);
-    midiDeviceListConnection.reset();
 }
 
 //==============================================================================
@@ -165,30 +149,23 @@ bool SoundOfLifeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    buffer.clear();
+    midiMessages.clear();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    if (!isMidiLocked)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        juce::MidiBuffer::Iterator it(midiOutBuffer);
+        juce::MidiMessage currentMessage;
+        int samplePos{};
 
-        // ..do something to the data...
+        while (it.getNextEvent(currentMessage, samplePos))
+        {
+            DBG(currentMessage.getDescription());
+            //currentMessage.getTimeStamp();
+        }
+
+        midiMessages.swapWith(midiOutBuffer);
+        midiOutBuffer.clear();
     }
 }
 
@@ -308,68 +285,35 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
         param->setValueNotifyingHost(isAlive ? 0.0f : 1.0f); // flips the alive state so that the cells value changes
     }
     processMIDIFromCells(cellIndexes);
-    sendMidiToOutput();
 }
 
 //==============================================================================
-void SoundOfLifeAudioProcessor::selectMidiOutDevice()
-{
-    // reset midiOut unique_ptr so that it is cleared in case no devices are available
-    if (midiOutDevice) midiOutDevice.reset();
-
-    // try to use MIDI Bus 1 as default
-    for (auto deviceInfo : juce::MidiOutput::getAvailableDevices())
-    {
-        if (deviceInfo.name == "MIDI Bus 1")
-        {
-            midiOutDevice = juce::MidiOutput::openDevice(deviceInfo.identifier);
-            if (midiOutDevice.get() != nullptr) return;
-        }
-    }
-
-    // if default not available, use next one found that is available
-    for (auto deviceInfo : juce::MidiOutput::getAvailableDevices())
-    {
-        midiOutDevice = juce::MidiOutput::openDevice(deviceInfo.identifier);
-
-        if (midiOutDevice.get() != nullptr) break;
-    }
-}
-
 void SoundOfLifeAudioProcessor::processMIDIFromCells(std::vector<int> const& cellIndexes)
 {
+    // lock midi to prevent incomplete messages being sent
+    isMidiLocked = true;
+
     double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
     for (int const cellIndex : cellIndexes)
     {
-        juce::MidiMessage m = apvts.getRawParameterValue(ID::getCellId(cellIndex))
-            ? getNoteOffFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
+        juce::MidiMessage m = *apvts.getRawParameterValue(ID::getCellId(cellIndex)) > 0.1f
+            ? getNoteOnFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
         m.setTimeStamp(timestamp);
         midiOutBuffer.addEvent(m, 0);
     }
+
+    // unlock midi to allow them to be sent 
+    isMidiLocked = false;
 }
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
 {
-    return juce::MidiMessage::noteOn(1, getMidiNoteFromCellIndex(cellIndex), 80.0f);
+    return juce::MidiMessage::noteOn(1, getMidiNoteFromCellIndex(cellIndex), 0.8f);
 }
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
 {
     return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex) + 23);
-}
-
-void SoundOfLifeAudioProcessor::sendMidiToOutput()
-{
-    if (midiOutDevice.get() != nullptr)
-    {
-        auto isRunning = midiOutDevice->isBackgroundThreadRunning();
-        midiOutDevice->sendBlockOfMessagesNow(midiOutBuffer);
-    }
-    else
-    {
-        DBG("Unable to send MIDI messages as no MIDI Output Device is available");
-    }
-    midiOutBuffer.clear();
 }
 
 //==============================================================================

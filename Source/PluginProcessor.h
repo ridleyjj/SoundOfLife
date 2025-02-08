@@ -84,7 +84,8 @@ public:
     void addTimerListener(jr::TimerListener* l) { timerListeners.push_back(l); }
     void removeTimerListener(jr::TimerListener* l);
 
-    //==============================================================================
+private:
+    //=================== methods =======================
     /*
     Takes a list of indexes of all of the cells that have changed, and creates MIDI messages from their state
     */
@@ -92,11 +93,6 @@ public:
     int getMidiNoteFromCellIndex(int cellIndex) { return cellIndex + 23; }
     juce::MidiMessage getNoteOnFromCell(int cellIndex);
     juce::MidiMessage getNoteOffFromCell(int cellIndex);
-    void sendMidiToOutput();
-
-private:
-    //=================== methods =======================
-    void selectMidiOutDevice();
 
     //=================== params ========================
     std::unique_ptr<jr::PresetManager> presetManager;
@@ -115,10 +111,9 @@ private:
 
     std::vector<jr::TimerListener*> timerListeners{};
 
-    juce::MidiDeviceListConnection midiDeviceListConnection;
-    std::unique_ptr<juce::MidiOutput> midiOutDevice;
     std::vector<juce::MidiMessage> midiMessagesOut{};
     juce::MidiBuffer midiOutBuffer{};
+    bool isMidiLocked{ false };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)
