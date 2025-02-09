@@ -86,10 +86,7 @@ public:
 
 private:
     //=================== methods =======================
-    /*
-    Takes a list of indexes of all of the cells that have changed, and creates MIDI messages from their state
-    */
-    void processMIDIFromCells(std::vector<int> const& cellIndexes);
+    void addMidiMessageFromCell(int cellIndex, bool isAlive);
     int getMidiNoteFromCellIndex(int cellIndex) { return cellIndex + 23; }
     juce::MidiMessage getNoteOnFromCell(int cellIndex);
     juce::MidiMessage getNoteOffFromCell(int cellIndex);
@@ -111,9 +108,7 @@ private:
 
     std::vector<jr::TimerListener*> timerListeners{};
 
-    std::vector<juce::MidiMessage> midiMessagesOut{};
     juce::MidiBuffer midiOutBuffer{};
-    bool isMidiLocked{ false };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)

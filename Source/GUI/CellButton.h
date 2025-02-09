@@ -57,7 +57,6 @@ namespace jr
 
         private:
             bool isAlive{ false };
-            bool nextValue{ false };
             int row{};
             int column{};
             CellButtonListener& listener;

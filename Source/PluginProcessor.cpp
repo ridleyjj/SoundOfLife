@@ -152,21 +152,19 @@ void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     buffer.clear();
     midiMessages.clear();
 
-    if (!isMidiLocked)
+    double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
+
+    juce::MidiBuffer::Iterator it(midiOutBuffer);
+    juce::MidiMessage currentMessage;
+    int samplePos{};
+
+    while (it.getNextEvent(currentMessage, samplePos))
     {
-        juce::MidiBuffer::Iterator it(midiOutBuffer);
-        juce::MidiMessage currentMessage;
-        int samplePos{};
-
-        while (it.getNextEvent(currentMessage, samplePos))
-        {
-            DBG(currentMessage.getDescription());
-            //currentMessage.getTimeStamp();
-        }
-
-        midiMessages.swapWith(midiOutBuffer);
-        midiOutBuffer.clear();
+        currentMessage.setTimeStamp(timestamp);
+        midiMessages.addEvent(currentMessage, samplePos);
     }
+
+    midiOutBuffer.clear();
 }
 
 //==============================================================================
@@ -251,6 +249,7 @@ std::function<void(bool)> SoundOfLifeAudioProcessor::getListenerCallbackForCell(
         {
             lifeGridService.getCell(m, n)->setNextValue(newValue);
             lifeGridService.getCell(m, n)->triggerGeneration();
+            addMidiMessageFromCell(cellIndex, newValue);
         };
 }
 
@@ -284,26 +283,13 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
         bool isAlive = param->getValue() > 0.1f;
         param->setValueNotifyingHost(isAlive ? 0.0f : 1.0f); // flips the alive state so that the cells value changes
     }
-    processMIDIFromCells(cellIndexes);
 }
 
 //==============================================================================
-void SoundOfLifeAudioProcessor::processMIDIFromCells(std::vector<int> const& cellIndexes)
+void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAlive)
 {
-    // lock midi to prevent incomplete messages being sent
-    isMidiLocked = true;
-
-    double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
-    for (int const cellIndex : cellIndexes)
-    {
-        juce::MidiMessage m = *apvts.getRawParameterValue(ID::getCellId(cellIndex)) > 0.1f
-            ? getNoteOnFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
-        m.setTimeStamp(timestamp);
-        midiOutBuffer.addEvent(m, 0);
-    }
-
-    // unlock midi to allow them to be sent 
-    isMidiLocked = false;
+    juce::MidiMessage m = isAlive ? getNoteOnFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
+    midiOutBuffer.addEvent(m, 0);
 }
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
@@ -313,7 +299,7 @@ juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
 {
-    return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex) + 23);
+    return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex), 1.0f);
 }
 
 //==============================================================================
