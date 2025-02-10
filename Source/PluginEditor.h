@@ -15,6 +15,7 @@
 #include "GUI/jr_PresetPanel.h"
 #include "GUI/Blinker.h"
 #include "Service/jr_TimerListener.h"
+#include "LookAndFeel/jr_StyleSheet.h"
 
 //==============================================================================
 /**
@@ -37,6 +38,8 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SoundOfLifeAudioProcessor& audioProcessor;
+
+    jr::CustomLookAndFeel customLookAndFeel;
 
     jr::PresetPanel presetPanel;
 

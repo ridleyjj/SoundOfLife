@@ -14,6 +14,9 @@
 SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), presetPanel(p.getPresetManager())
 {
+    setLookAndFeel(&customLookAndFeel);
+    juce::LookAndFeel::setDefaultLookAndFeel(&customLookAndFeel);
+
     lifeGrid = std::make_shared<jr::LifeGridGUI>(p.getLifeGridService());
     gridAttachment = std::make_unique<jr::LifeGridAttachment>(*lifeGrid, p.getAPVTS());
 
