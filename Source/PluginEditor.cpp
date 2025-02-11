@@ -38,12 +38,14 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     p.addTimerListener(this);
 
-    setSize (400, 650);
+    setSize (400, 600);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 {
     audioProcessor.removeTimerListener(this);
+    juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -55,23 +57,23 @@ void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 
 void SoundOfLifeAudioProcessorEditor::resized()
 {
-    auto contentContainer = getBounds().reduced(10);
-    auto presetRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.15f));
-    auto topRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.23f));
+    auto contentContainer = getBounds();
+    auto presetRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.08f));
+    auto topRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.25f));
 
-    presetPanel.setBounds(presetRow.reduced(10));
+    presetPanel.setBounds(presetRow);
 
-    auto firstButtonSection = topRow.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(15, 5);
-    nextButton.setBounds(firstButtonSection.removeFromTop(topRow.proportionOfHeight(0.5f)).reduced(4));
+    auto firstButtonSection = topRow.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(5, 5);
+    nextButton.setBounds(firstButtonSection.removeFromTop(firstButtonSection.proportionOfHeight(0.5f)).reduced(4));
     randomButton.setBounds(firstButtonSection.reduced(4));
 
-    auto timerSection = topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(15, 5);
+    auto timerSection = topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(5, 5);
     timerButton.setBounds(timerSection.removeFromLeft(timerSection.proportionOfWidth(0.75f)));
     
     blinker.setBounds(timerSection.reduced(16, 4));
-    frequencySlider.setBounds(topRow.reduced(4, 24));
+    frequencySlider.setBounds(topRow.reduced(4, 16));
 
-    lifeGrid->setBounds(contentContainer);
+    lifeGrid->setBounds(contentContainer.reduced(4));
 }
 
 //============================= Callbacks ================================
