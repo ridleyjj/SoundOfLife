@@ -34,6 +34,9 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
 
+    nextButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
+    randomButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
+
     addAndMakeVisible(presetPanel);
 
     p.addTimerListener(this);
@@ -52,7 +55,7 @@ SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colours::darkslategrey);
+    g.fillAll(juce::Colour::fromRGB(96, 113, 150));
 }
 
 void SoundOfLifeAudioProcessorEditor::resized()
