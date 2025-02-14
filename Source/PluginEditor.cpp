@@ -66,15 +66,13 @@ void SoundOfLifeAudioProcessorEditor::resized()
 
     presetPanel.setBounds(presetRow);
 
-    auto firstButtonSection = topRow.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(5, 5);
-    nextButton.setBounds(firstButtonSection.removeFromTop(firstButtonSection.proportionOfHeight(0.5f)).reduced(4));
+    auto firstButtonSection = topRow.removeFromTop(topRow.proportionOfHeight(0.35f)).reduced(5, 5);
+    nextButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
+    timerButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
     randomButton.setBounds(firstButtonSection.reduced(4));
-
-    auto timerSection = topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(5, 5);
-    timerButton.setBounds(timerSection.removeFromLeft(timerSection.proportionOfWidth(0.75f)));
     
-    blinker.setBounds(timerSection.reduced(16, 4));
-    frequencySlider.setBounds(topRow.reduced(4, 16));
+    frequencySlider.setBounds(topRow.removeFromLeft(topRow.proportionOfWidth(0.8f)).reduced(4, 24));
+    blinker.setBounds(topRow.reduced(24));
 
     lifeGrid->setBounds(contentContainer.reduced(4));
 }
