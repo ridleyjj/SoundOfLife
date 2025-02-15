@@ -152,6 +152,27 @@ void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     buffer.clear();
     midiMessages.clear();
 
+    auto playHead = getPlayHead();
+
+    if (playHead != nullptr)
+    {
+        auto positionInfo = playHead->getPosition();
+        if (positionInfo.hasValue())
+        {
+            auto positionInQuarterNotes = positionInfo->getPpqPosition();
+            if (positionInQuarterNotes.hasValue())
+            {
+                if (*positionInQuarterNotes > currentNote + 1.0)
+                {
+                    // beat
+                    DBG(currentNote + 1.0);
+                }
+
+                currentNote = floor(*positionInQuarterNotes);
+            }
+        }
+    }
+
     double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
 
     juce::MidiBuffer::Iterator it(midiOutBuffer);
