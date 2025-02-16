@@ -84,6 +84,11 @@ public:
     void addTimerListener(jr::TimerListener* l) { timerListeners.push_back(l); }
     void removeTimerListener(jr::TimerListener* l);
 
+    /*
+    Returns true if the current sample block crosses over to a new beat in the project's tempo. Only call from processBlock()
+    */
+    bool isNewBeat();
+
 private:
     //=================== methods =======================
     void addMidiMessageFromCell(int cellIndex, bool isAlive);

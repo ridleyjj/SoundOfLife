@@ -147,10 +147,9 @@ bool SoundOfLifeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 }
 #endif
 
-void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+bool SoundOfLifeAudioProcessor::isNewBeat()
 {
-    buffer.clear();
-    midiMessages.clear();
+    bool isBeat = false;
 
     auto playHead = getPlayHead();
 
@@ -162,16 +161,26 @@ void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
             auto positionInQuarterNotes = positionInfo->getPpqPosition();
             if (positionInQuarterNotes.hasValue())
             {
-                if (*positionInQuarterNotes > currentNote + 1.0)
+                auto newNote = floor(*positionInQuarterNotes);
+                if (newNote != currentNote)
                 {
-                    // beat
-                    DBG(currentNote + 1.0);
+                    isBeat = true;
                 }
 
-                currentNote = floor(*positionInQuarterNotes);
+                currentNote = newNote;
             }
         }
     }
+    return isBeat;
+}
+
+void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+    buffer.clear();
+    midiMessages.clear();
+
+    if (isNewBeat())
+        lifeGridService.nextGeneration();
 
     double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
 
