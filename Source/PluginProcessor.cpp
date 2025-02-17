@@ -179,7 +179,7 @@ void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     buffer.clear();
     midiMessages.clear();
 
-    if (isNewBeat())
+    if (isAutoModeOn() && isTempoSyncModeOn() && isNewBeat())
         lifeGridService.nextGeneration();
 
     double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
@@ -238,7 +238,7 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 //==============================================================================
 void SoundOfLifeAudioProcessor::timerCallback()
 {
-    if (timerOn)
+    if (isAutoModeOn() && !isTempoSyncModeOn())
     {
         lifeGridService.nextGeneration();
         for (auto listener : timerListeners)
@@ -266,6 +266,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::c
         const juce::String cellId = ID::getCellId(i);
         layout.add(std::make_unique<juce::AudioParameterBool>(cellId, cellId, false));
     }
+
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::AUTO_GEN_MODE, ID::AUTO_GEN_MODE, false));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::TEMPO_SYNC_MODE, ID::TEMPO_SYNC_MODE, false));
     
     return layout;
 }

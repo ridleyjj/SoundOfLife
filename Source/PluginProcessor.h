@@ -17,6 +17,8 @@
 namespace ID
 {
     juce::String getCellId(int index);
+    const juce::String AUTO_GEN_MODE{ "Auto-Generate Mode" };
+    const juce::String TEMPO_SYNC_MODE{ "Tempo-Sync Mode" };
 }
 
 //==============================================================================
@@ -88,6 +90,9 @@ public:
     Returns true if the current sample block crosses over to a new beat in the project's tempo. Only call from processBlock()
     */
     bool isNewBeat();
+
+    bool isAutoModeOn() { return (bool)*apvts.getRawParameterValue(ID::AUTO_GEN_MODE); }
+    bool isTempoSyncModeOn() { return (bool)*apvts.getRawParameterValue(ID::TEMPO_SYNC_MODE); }
 
 private:
     //=================== methods =======================

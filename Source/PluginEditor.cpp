@@ -30,7 +30,8 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
     frequencySlider.addListener(this);
 
-    timerButton.onClick = [&]() { p.toggleTimer(); };
+    timerToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(timerButton, ID::AUTO_GEN_MODE, p.getAPVTS());
+
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
 

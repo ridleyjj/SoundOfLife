@@ -16,6 +16,7 @@
 #include "GUI/Blinker.h"
 #include "Service/jr_TimerListener.h"
 #include "LookAndFeel/jr_StyleSheet.h"
+#include "GUI/ToggleAttachment.h"
 
 //==============================================================================
 /**
@@ -54,6 +55,8 @@ private:
     juce::Label frequencyLabel;
 
     jr::Blinker blinker;
+
+    std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessorEditor)
 };

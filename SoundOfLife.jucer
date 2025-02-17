@@ -45,6 +45,8 @@
               file="Source/GUI/LifeGridAttachment.h"/>
         <FILE id="qyut2p" name="LifeGridGUI.cpp" compile="1" resource="0" file="Source/GUI/LifeGridGUI.cpp"/>
         <FILE id="EvrK9Z" name="LifeGridGUI.h" compile="0" resource="0" file="Source/GUI/LifeGridGUI.h"/>
+        <FILE id="U471Mq" name="ToggleAttachment.h" compile="0" resource="0"
+              file="Source/GUI/ToggleAttachment.h"/>
       </GROUP>
       <FILE id="i7bU4I" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
