@@ -14,7 +14,7 @@ namespace jr
 			*/
 			void startBlink(int timeInMs)
 			{
-				startTimer(timeInMs / 2);
+				startTimer(juce::jmax(200, timeInMs / 4));
 				blink = true;
 				repaint();
 			}
