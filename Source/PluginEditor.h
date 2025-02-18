@@ -47,16 +47,15 @@ private:
     std::shared_ptr<jr::LifeGridGUI> lifeGrid;
     std::unique_ptr<jr::LifeGridAttachment> gridAttachment;
 
-    juce::TextButton nextButton{ "Next Generation" };
-    juce::TextButton randomButton{ "Randomise" };
-    juce::ToggleButton timerButton{ "Timer On/Off" };
+    juce::TextButton nextButton{ "Next Generation" }, randomButton{ "Randomise" };
+    juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" };
 
-    juce::Slider frequencySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::TextBoxBelow };
+    juce::Slider frequencySlider{ juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow };
     juce::Label frequencyLabel;
 
     jr::Blinker blinker;
 
-    std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment;
+    std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment, tempoSyncToggleAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessorEditor)
 };

@@ -23,14 +23,16 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(*lifeGrid.get());
     addAndMakeVisible(nextButton);
     addAndMakeVisible(timerButton);
+    addAndMakeVisible(tempoSyncButton);
     addAndMakeVisible(randomButton);
     addAndMakeVisible(blinker);
 
-    jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Timer Frequency (ms)", 250, 2000, 1, true);
+    jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Interval (ms)", 250, 2000, 1, true);
     frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
     frequencySlider.addListener(this);
 
     timerToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(timerButton, ID::AUTO_GEN_MODE, p.getAPVTS());
+    tempoSyncToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(tempoSyncButton, ID::TEMPO_SYNC_MODE, p.getAPVTS());
 
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
@@ -42,7 +44,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     p.addTimerListener(this);
 
-    setSize (400, 600);
+    setSize (400, 650);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
@@ -62,17 +64,18 @@ void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 void SoundOfLifeAudioProcessorEditor::resized()
 {
     auto contentContainer = getBounds();
-    auto presetRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.08f));
-    auto topRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.25f));
+    auto presetRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.076f));
+    auto topRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.36f));
 
     presetPanel.setBounds(presetRow);
 
-    auto firstButtonSection = topRow.removeFromTop(topRow.proportionOfHeight(0.35f)).reduced(5, 5);
+    auto firstButtonSection = topRow.removeFromTop(getBounds().proportionOfHeight(0.076f)).reduced(5, 5);
     nextButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
     timerButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
     randomButton.setBounds(firstButtonSection.reduced(4));
     
-    frequencySlider.setBounds(topRow.removeFromLeft(topRow.proportionOfWidth(0.8f)).reduced(4, 24));
+    frequencySlider.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.34f)).reduced(4, 24));
+    tempoSyncButton.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.43f)).reduced(4, 24));
     blinker.setBounds(topRow.reduced(24));
 
     lifeGrid->setBounds(contentContainer.reduced(4));
