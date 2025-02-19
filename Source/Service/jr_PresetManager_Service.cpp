@@ -9,6 +9,7 @@ namespace jr
             .getChildFile("SoundOfLife")};
     const juce::String PresetManager::extension{"preset"};
     const juce::String PresetManager::presetNameProperty{"presetName"};
+    const std::vector<juce::String> PresetManager::excludedParams{ ID::AUTO_GEN_MODE, ID::TEMPO_SYNC_MODE };
 
     PresetManager::PresetManager(juce::AudioProcessorValueTreeState &_apvts) : apvts(_apvts)
     {
@@ -77,9 +78,19 @@ namespace jr
         }
 
         juce::XmlDocument xmlDocument{presetFile};
-        const auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDocument.getDocumentElement());
+        auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDocument.getDocumentElement());
+        overrideExcludedParams(valueTreeToLoad);
         apvts.replaceState(valueTreeToLoad);
         currentPreset.setValue(presetName);
+    }
+
+    void PresetManager::overrideExcludedParams(juce::ValueTree& valueTree)
+    {
+        for (auto paramId : excludedParams)
+        {
+            auto currentValue = apvts.getRawParameterValue(paramId);
+            // save value of property to new value tree
+        }
     }
 
     juce::StringArray PresetManager::getAllPresets()

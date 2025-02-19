@@ -20,6 +20,7 @@
       </GROUP>
       <GROUP id="{179C32D5-FD63-3D3D-FEC6-E101D2987E39}" name="Service">
         <FILE id="ZDv9n3" name="ApvtsListener.h" compile="0" resource="0" file="Source/Service/ApvtsListener.h"/>
+        <FILE id="dtsMYl" name="id_constants.h" compile="0" resource="0" file="Source/Service/id_constants.h"/>
         <FILE id="MRtgkB" name="jr_PresetManager_Service.cpp" compile="1" resource="0"
               file="Source/Service/jr_PresetManager_Service.cpp"/>
         <FILE id="TBaMUR" name="jr_PresetManager_Service.h" compile="0" resource="0"

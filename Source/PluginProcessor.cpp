@@ -9,14 +9,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-namespace ID
-{
-    juce::String getCellId(int index)
-    {
-        return "CELL_" + juce::String{ index };
-    }
-}
-
 //==============================================================================
 SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
