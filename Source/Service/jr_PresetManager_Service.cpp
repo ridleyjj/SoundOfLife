@@ -1,4 +1,5 @@
 #include "jr_PresetManager_Service.h"
+#include "id_constants.h"
 
 namespace jr
 {
@@ -89,7 +90,7 @@ namespace jr
         for (auto paramId : excludedParams)
         {
             auto currentValue = apvts.getRawParameterValue(paramId);
-            // save value of property to new value tree
+            valueTree.appendChild(juce::ValueTree{ "PARAM", {{ "id", paramId }, { "value", (double)*currentValue }} }, nullptr);
         }
     }
 
