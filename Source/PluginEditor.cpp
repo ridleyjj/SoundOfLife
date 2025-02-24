@@ -65,12 +65,12 @@ void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 void SoundOfLifeAudioProcessorEditor::resized()
 {
     auto contentContainer = getBounds();
-    auto presetRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.076f));
-    auto topRow = contentContainer.removeFromTop(contentContainer.proportionOfHeight(0.36f));
+    auto presetRow = contentContainer.removeFromTop(50);
+    auto topRow = contentContainer.removeFromTop(200);
 
     presetPanel.setBounds(presetRow);
 
-    auto firstButtonSection = topRow.removeFromTop(getBounds().proportionOfHeight(0.076f)).reduced(5, 5);
+    auto firstButtonSection = topRow.removeFromTop(50).reduced(5, 5);
     nextButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
     timerButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
     randomButton.setBounds(firstButtonSection.reduced(4));

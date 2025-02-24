@@ -38,8 +38,9 @@ namespace jr
 				}
 
 				auto diameter = juce::jmin<float>(getHeight(), getWidth());
+				diameter = juce::jmin<float>(diameter, 25);
 
-				g.fillEllipse(juce::Rectangle<float>(diameter, diameter));
+				g.fillEllipse(juce::Rectangle<float>(diameter, diameter).withCentre(getLocalBounds().getCentre().toFloat()));
 			}
 
 			void timerCallback() override
