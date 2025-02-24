@@ -65,15 +65,21 @@ namespace jr
     void LifeGridGUI::resized()
     {
         auto container = getLocalBounds();
-        auto rowHeight = container.proportionOfHeight(1.0f / numRows);
-        auto cellWidth = container.proportionOfWidth(1.0f / rowSize);
+
+        auto cellSize = juce::jmin(container.proportionOfHeight(1.0 / numRows), container.proportionOfWidth(1.0 / rowSize));
+
+        auto hMargins = container.getWidth() - (cellSize * rowSize);
+        auto vMargins = container.getHeight() - (cellSize * numRows);
+
+        container = container.reduced(hMargins / 2.0f, vMargins / 2.0f);
 
         for (int rowNum{}; rowNum < numRows; rowNum++)
         {
-            auto row = container.removeFromTop(rowHeight);
+            auto row = container.removeFromTop(cellSize);
             for (int cellIndex{}; cellIndex < rowSize; cellIndex++)
             {
-                cellGrid.at(rowNum)->at(cellIndex)->setBounds(row.removeFromLeft(cellWidth));
+                auto bounds = (cellIndex == rowSize - 1) ? row : row.removeFromLeft(cellSize);
+                cellGrid.at(rowNum)->at(cellIndex)->setBounds(bounds);
             }
         }
     }

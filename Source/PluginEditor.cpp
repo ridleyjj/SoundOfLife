@@ -79,7 +79,7 @@ void SoundOfLifeAudioProcessorEditor::resized()
     tempoSyncButton.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.43f)).reduced(4, 24));
     blinker.setBounds(topRow.reduced(24));
 
-    lifeGrid->setBounds(contentContainer.reduced(4));
+    lifeGrid->setBounds(contentContainer);
 }
 
 //============================= Callbacks ================================
