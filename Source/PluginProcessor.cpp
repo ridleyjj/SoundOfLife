@@ -264,6 +264,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::AUTO_GEN_MODE, ID::AUTO_GEN_MODE, false));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::TEMPO_SYNC_MODE, ID::TEMPO_SYNC_MODE, false));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::ACCEPT_MIDI_NOTE_OFF_INPUT, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, true));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::VELOCITY, ID::VELOCITY, 0.0f, 1.0f, 0.5f));
     
     return layout;
 }
@@ -328,7 +329,8 @@ void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAli
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
 {
-    return juce::MidiMessage::noteOn(1, getMidiNoteFromCellIndex(cellIndex), 0.8f);
+    float velocity = 0.1f + 0.7f * apvts.getParameter(ID::VELOCITY)->getValue();
+    return juce::MidiMessage::noteOn(1, getMidiNoteFromCellIndex(cellIndex), velocity);
 }
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)

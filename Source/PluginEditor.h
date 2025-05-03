@@ -51,7 +51,10 @@ private:
     juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" }, acceptNoteOffButton{ "Accept MIDI Note Off Input" };
 
     juce::Slider frequencySlider{ juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow };
-    juce::Label frequencyLabel;
+    juce::Slider velocitySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::NoTextBox };
+    juce::Label frequencyLabel, velocityLabel;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
 
     jr::Blinker blinker;
 
