@@ -336,13 +336,18 @@ juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
     return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex), 1.0f);
 }
 
-void SoundOfLifeAudioProcessor::processIncomingMidiMessages(juce::MidiBuffer& midiMessages) {
-    if (!midiMessages.isEmpty()) {
-        for (const juce::MidiMessageMetadata metadata : midiMessages) {
+void SoundOfLifeAudioProcessor::processIncomingMidiMessages(juce::MidiBuffer& midiMessages)
+{
+    if (!midiMessages.isEmpty())
+    {
+        for (const juce::MidiMessageMetadata metadata : midiMessages)
+        {
             auto message = metadata.getMessage();
-            if (message.isNoteOn() || (apvts.getParameter(ID::ACCEPT_MIDI_NOTE_OFF_INPUT)->getValue() && message.isNoteOff())) {
+            if (message.isNoteOn() || (apvts.getParameter(ID::ACCEPT_MIDI_NOTE_OFF_INPUT)->getValue() && message.isNoteOff()))
+            {
                 int numCells = lifeGridService.numRows * lifeGridService.rowSize;
-                if (message.getNoteNumber() >= 23 && message.getNoteNumber() < getMidiNoteFromCellIndex(numCells)) {
+                if (message.getNoteNumber() >= 23 && message.getNoteNumber() < getMidiNoteFromCellIndex(numCells))
+                {
                     updateSingleCellParamWithValue(getCellIndexFromMidiNote(message.getNoteNumber()), message.isNoteOn());
                 }
             }
