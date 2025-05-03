@@ -168,6 +168,8 @@ bool SoundOfLifeAudioProcessor::isNewBeat()
 
 void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    processIncomingMidiMessages(midiMessages);
+
     buffer.clear();
     midiMessages.clear();
 
@@ -261,6 +263,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::c
 
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::AUTO_GEN_MODE, ID::AUTO_GEN_MODE, false));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::TEMPO_SYNC_MODE, ID::TEMPO_SYNC_MODE, false));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::ACCEPT_MIDI_NOTE_OFF_INPUT, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, true));
     
     return layout;
 }
@@ -310,6 +313,12 @@ void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellInde
     }
 }
 
+void SoundOfLifeAudioProcessor::updateSingleCellParamWithValue(int const index, bool const isAlive)
+{
+    auto param = apvts.getParameter(ID::getCellId(index));
+    param->setValueNotifyingHost(isAlive);
+}
+
 //==============================================================================
 void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAlive)
 {
@@ -325,6 +334,20 @@ juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOffFromCell(int cellIndex)
 {
     return juce::MidiMessage::noteOff(1, getMidiNoteFromCellIndex(cellIndex), 1.0f);
+}
+
+void SoundOfLifeAudioProcessor::processIncomingMidiMessages(juce::MidiBuffer& midiMessages) {
+    if (!midiMessages.isEmpty()) {
+        for (const juce::MidiMessageMetadata metadata : midiMessages) {
+            auto message = metadata.getMessage();
+            if (message.isNoteOn() || (apvts.getParameter(ID::ACCEPT_MIDI_NOTE_OFF_INPUT)->getValue() && message.isNoteOff())) {
+                int numCells = lifeGridService.numRows * lifeGridService.rowSize;
+                if (message.getNoteNumber() >= 23 && message.getNoteNumber() < getMidiNoteFromCellIndex(numCells)) {
+                    updateSingleCellParamWithValue(getCellIndexFromMidiNote(message.getNoteNumber()), message.isNoteOn());
+                }
+            }
+        }
+    }
 }
 
 //==============================================================================

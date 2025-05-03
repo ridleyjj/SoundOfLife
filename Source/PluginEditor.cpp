@@ -27,6 +27,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(tempoSyncButton);
     addAndMakeVisible(randomButton);
     addAndMakeVisible(blinker);
+    addAndMakeVisible(acceptNoteOffButton);
 
     jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Interval (ms)", 250, 2000, 1, true);
     frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
@@ -34,6 +35,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     timerToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(timerButton, ID::AUTO_GEN_MODE, p.getAPVTS());
     tempoSyncToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(tempoSyncButton, ID::TEMPO_SYNC_MODE, p.getAPVTS());
+    acceptNoteOffToggleAttachment = std::make_unique<jr::ToggleButtonAttachment>(acceptNoteOffButton, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, p.getAPVTS());
 
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
@@ -76,8 +78,11 @@ void SoundOfLifeAudioProcessorEditor::resized()
     randomButton.setBounds(firstButtonSection.reduced(4));
     
     frequencySlider.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.34f)).reduced(4, 24));
-    tempoSyncButton.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.43f)).reduced(4, 24));
-    blinker.setBounds(topRow.reduced(24));
+
+    acceptNoteOffButton.setBounds(topRow.removeFromTop(topRow.proportionOfHeight(0.5f)).reduced(2));
+    tempoSyncButton.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.43f)).reduced(4));
+    
+    blinker.setBounds(topRow.reduced(4));
 
     lifeGrid->setBounds(contentContainer);
 }

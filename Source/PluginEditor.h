@@ -48,14 +48,14 @@ private:
     std::unique_ptr<jr::LifeGridAttachment> gridAttachment;
 
     juce::TextButton nextButton{ "Next Generation" }, randomButton{ "Randomise" };
-    juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" };
+    juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" }, acceptNoteOffButton{ "Accept MIDI Note Off Input" };
 
     juce::Slider frequencySlider{ juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow };
     juce::Label frequencyLabel;
 
     jr::Blinker blinker;
 
-    std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment, tempoSyncToggleAttachment;
+    std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment, tempoSyncToggleAttachment, acceptNoteOffToggleAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessorEditor)
 };

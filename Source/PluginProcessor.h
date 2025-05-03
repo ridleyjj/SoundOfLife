@@ -75,6 +75,7 @@ public:
 
     //==============================================================================
     void updateCellParam(std::vector<int> const& cellIndexes) override;
+    void updateSingleCellParamWithValue(int const index, bool const isAlive);
 
     //==============================================================================
     void addTimerListener(jr::TimerListener* l) { timerListeners.push_back(l); }
@@ -92,8 +93,10 @@ private:
     //=================== methods =======================
     void addMidiMessageFromCell(int cellIndex, bool isAlive);
     int getMidiNoteFromCellIndex(int cellIndex) { return cellIndex + 23; }
+    int getCellIndexFromMidiNote(int midiNoteNumber) { return midiNoteNumber - 23; }
     juce::MidiMessage getNoteOnFromCell(int cellIndex);
     juce::MidiMessage getNoteOffFromCell(int cellIndex);
+    void processIncomingMidiMessages(juce::MidiBuffer& midiMessages);
 
     //=================== params ========================
     std::unique_ptr<jr::PresetManager> presetManager;
