@@ -30,8 +30,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(acceptNoteOffButton);
 
     jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Interval (ms)", 250, 2000, 1, true);
-    frequencySlider.setValue(p.getTimerIntervalMs(), juce::dontSendNotification);
-    frequencySlider.addListener(this);
+    frequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.getAPVTS(), ID::FREQUENCY, frequencySlider);
     
     jr::JuceUtils::initSimpleSlider(this, &velocitySlider, &velocityLabel, "Velocity");
     attackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.getAPVTS(), ID::VELOCITY, velocitySlider);
@@ -92,14 +91,6 @@ void SoundOfLifeAudioProcessorEditor::resized()
 }
 
 //============================= Callbacks ================================
-
-void SoundOfLifeAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
-{
-    if (slider == &frequencySlider)
-    {
-        audioProcessor.setTimerInterval(frequencySlider.getValue());
-    }
-}
 
 void SoundOfLifeAudioProcessorEditor::onTimerBeat()
 {

@@ -28,8 +28,8 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
     addListenersToApvts();
 
     lifeGridService.addListener(this);
-    
-    startTimer(timerIntervalMs);
+
+    startTimer(getTimerIntervalMs());
 }
 
 SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
@@ -242,12 +242,6 @@ void SoundOfLifeAudioProcessor::timerCallback()
     }
 }
 
-void SoundOfLifeAudioProcessor::setTimerInterval(int timeInMs)
-{
-    timerIntervalMs = timeInMs;
-    startTimer(timerIntervalMs);
-}
-
 //==============================================================================
 juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::createParameterLayout()
 {
@@ -265,6 +259,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::TEMPO_SYNC_MODE, ID::TEMPO_SYNC_MODE, false));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::ACCEPT_MIDI_NOTE_OFF_INPUT, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, true));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::VELOCITY, ID::VELOCITY, 0.0f, 1.0f, 0.5f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::FREQUENCY, ID::FREQUENCY, 250, 2000, 1000));
     
     return layout;
 }
@@ -291,6 +286,8 @@ void SoundOfLifeAudioProcessor::addListenersToApvts()
         paramListeners.push_back(std::make_unique<jr::ApvtsListener>(getListenerCallbackForCell(i)));
         apvts.addParameterListener(ID::getCellId(i), paramListeners.at(i).get());
     }
+
+    apvts.addParameterListener(ID::FREQUENCY, &frequencyListener);
 }
 
 void SoundOfLifeAudioProcessor::removeListenersFromApvts()
@@ -301,6 +298,8 @@ void SoundOfLifeAudioProcessor::removeListenersFromApvts()
     {
         apvts.removeParameterListener(ID::getCellId(i), paramListeners.at(i).get());
     }
+
+    apvts.removeParameterListener(ID::FREQUENCY, &frequencyListener);
 }
 
 //==============================================================================

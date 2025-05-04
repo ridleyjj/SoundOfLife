@@ -63,9 +63,8 @@ public:
 
     //==============================================================================
     void timerCallback() override;
-    void setTimerInterval(int timeInMs);
     void toggleTimer() { timerOn = !timerOn; }
-    int getTimerIntervalMs() { return timerIntervalMs; }
+    int getTimerIntervalMs() { return apvts.getParameter(ID::FREQUENCY)->getNormalisableRange().convertFrom0to1(apvts.getParameter(ID::FREQUENCY)->getValue()); }
     jr::PresetManager& getPresetManager() { return *presetManager; }
     bool getIsTimerOn() { return timerOn; }
 
@@ -108,6 +107,7 @@ private:
 
     juce::AudioProcessorValueTreeState apvts;
     std::vector<std::unique_ptr<jr::ApvtsListener>> paramListeners{};
+    jr::ApvtsListener frequencyListener{ [=](float t) { startTimer(static_cast<int> (t)); } };
 
     void addListenersToApvts();
     void removeListenersFromApvts();

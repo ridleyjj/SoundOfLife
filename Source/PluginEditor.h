@@ -21,7 +21,7 @@
 //==============================================================================
 /**
 */
-class SoundOfLifeAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener, public jr::TimerListener
+class SoundOfLifeAudioProcessorEditor  : public juce::AudioProcessorEditor, public jr::TimerListener
 {
 public:
     SoundOfLifeAudioProcessorEditor (SoundOfLifeAudioProcessor&);
@@ -30,8 +30,6 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-
-    void sliderValueChanged(juce::Slider* slider) override;
 
     void onTimerBeat() override;
 
@@ -54,7 +52,7 @@ private:
     juce::Slider velocitySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::NoTextBox };
     juce::Label frequencyLabel, velocityLabel;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attackSliderAttachment, frequencySliderAttachment;
 
     jr::Blinker blinker;
 
