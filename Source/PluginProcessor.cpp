@@ -303,7 +303,7 @@ void SoundOfLifeAudioProcessor::removeListenersFromApvts()
 }
 
 //==============================================================================
-void SoundOfLifeAudioProcessor::updateCellParam(std::vector<int> const& cellIndexes)
+void SoundOfLifeAudioProcessor::updateCellParam(std::set<int> const& cellIndexes)
 {
     for (int const cellIndex : cellIndexes)
     {

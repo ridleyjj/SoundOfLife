@@ -7,7 +7,7 @@ namespace jr
     class LifeGridServiceListener
     {
         public:
-            virtual void updateCellParam(std::vector<int> const & cellIndexes) = 0;
+            virtual void updateCellParam(std::set<int> const & cellIndexes) = 0;
     };
 
 
@@ -76,7 +76,7 @@ namespace jr
             void forEachCell(std::function<void(LifeCell*, int, int)> callback);
 
             Cell2DGrid cellGrid;
-            std::vector<int> changedCells{};
+            std::set<int> changedCells{};
 
             juce::Random random{};
 

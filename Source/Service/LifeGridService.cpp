@@ -34,8 +34,6 @@ namespace jr
 
 	void LifeGridService::nextGeneration()
 	{
-		changedCells.clear();
-
 		auto calcNextValue = [&](LifeCell* cell, int i, int j)
 			{
 				bool isAlive = cell->getIsAlive();
@@ -44,7 +42,7 @@ namespace jr
 				// only need to update APVTS if cell state changes
 				if (isAlive != isAliveNextGen)
 				{
-					changedCells.push_back(i * rowSize + j);
+					changedCells.insert(i * rowSize + j);
 				}
 			};
 
@@ -54,15 +52,13 @@ namespace jr
 
 	void LifeGridService::randomiseSetup()
 	{
-		changedCells.clear();
-
 		auto chooseRandomState = [&](LifeCell* cell, int i, int j)
 			{
 				bool isAlive = cell->getIsAlive();
 				bool isAliveNextGen = random.nextBool();
 				if (isAlive != isAliveNextGen)
 				{
-					changedCells.push_back(i * rowSize + j);
+					changedCells.insert(i * rowSize + j);
 				}
 			};
 		forEachCell(chooseRandomState);
