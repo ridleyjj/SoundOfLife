@@ -29,9 +29,53 @@ namespace jr
                 setMouseCursor(juce::MouseCursor::PointingHandCursor);
             }
 
-            void mouseUp(const juce::MouseEvent& event) override
+            ~CellButton()
+            {
+                currentHoverComp = nullptr;
+            }
+
+            void onClickOrDragOver()
             {
                 listener.onCellClick(row, column);
+                hasChanged = true;
+            }
+
+            void mouseDown(const juce::MouseEvent& event) override
+            {
+                onClickOrDragOver();
+            }
+
+            void mouseUp(const juce::MouseEvent& event) override
+            {
+                resetHasChanged();
+            }
+            
+            void mouseDrag(const juce::MouseEvent& event) override
+            {
+                auto globalPos = event.getScreenPosition();
+                CellButton* compUnderMouse = dynamic_cast<CellButton*>(juce::Desktop::getInstance().findComponentAt(globalPos));
+
+                bool isCompCell = compUnderMouse != nullptr;
+
+                if (isCompCell && !compUnderMouse->getHasChanged())
+                {
+                    if (getHasChanged() && compUnderMouse != this)
+                    {
+                        resetHasChanged();
+                    }
+
+                    if (compUnderMouse != currentHoverComp)
+                    {
+                        if (currentHoverComp != nullptr)
+                        {
+                            currentHoverComp->resetHasChanged();
+                        }
+
+                        currentHoverComp = compUnderMouse;
+                    }
+
+                    currentHoverComp->onClickOrDragOver();
+                }
             }
 
             void toggleAlive()
@@ -54,11 +98,24 @@ namespace jr
             {
                 return isAlive;
             }
+            
+            bool getHasChanged()
+            {
+                return hasChanged;
+            }
+            
+            void resetHasChanged()
+            {
+                hasChanged = false;
+            }
 
         private:
             bool isAlive{ false };
+            bool hasChanged{ false };
             int row{};
             int column{};
             CellButtonListener& listener;
+
+            CellButton* currentHoverComp = nullptr;
     };
 }
