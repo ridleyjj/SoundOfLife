@@ -320,6 +320,11 @@ void SoundOfLifeAudioProcessor::updateSingleCellParamWithValue(int const index, 
 }
 
 //==============================================================================
+int SoundOfLifeAudioProcessor::getMidiNoteFromCellIndex(int cellIndex)
+{
+    return cellIndex + 23;
+}
+
 void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAlive)
 {
     juce::MidiMessage m = isAlive ? getNoteOnFromCell(cellIndex) : getNoteOffFromCell(cellIndex);

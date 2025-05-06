@@ -28,6 +28,8 @@
               file="Source/Service/jr_PresetManager_Service.cpp"/>
         <FILE id="TBaMUR" name="jr_PresetManager_Service.h" compile="0" resource="0"
               file="Source/Service/jr_PresetManager_Service.h"/>
+        <FILE id="xdmAfF" name="jr_ScaleConstants.h" compile="0" resource="0"
+              file="Source/Service/jr_ScaleConstants.h"/>
         <FILE id="Kivwo3" name="jr_TimerListener.h" compile="0" resource="0"
               file="Source/Service/jr_TimerListener.h"/>
         <FILE id="MieT6N" name="LifeGridService.cpp" compile="1" resource="0"

@@ -91,7 +91,7 @@ public:
 private:
     //=================== methods =======================
     void addMidiMessageFromCell(int cellIndex, bool isAlive);
-    int getMidiNoteFromCellIndex(int cellIndex) { return cellIndex + 23; }
+    int getMidiNoteFromCellIndex(int cellIndex);
     int getCellIndexFromMidiNote(int midiNoteNumber) { return midiNoteNumber - 23; }
     juce::MidiMessage getNoteOnFromCell(int cellIndex);
     juce::MidiMessage getNoteOffFromCell(int cellIndex);
