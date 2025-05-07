@@ -2,8 +2,8 @@
 
 namespace jr
 {
-	const int LifeGridService::numRows{ 9 };
-	const int LifeGridService::rowSize{ 9 };
+	const int LifeGridService::numRows{ 8 };
+	const int LifeGridService::rowSize{ 8 };
 
 	LifeGridService::LifeGridService()
 	{
