@@ -9,6 +9,7 @@ namespace jr
     public:
         static const juce::File defaultDirectory;
         static const juce::String extension;
+        static const juce::String underscore;
         static const juce::String presetNameProperty;
         static const std::vector<juce::String> excludedParams;
 
@@ -21,10 +22,15 @@ namespace jr
 
         juce::String getCurrentPreset() { return currentPreset.toString(); }
 
+        bool getIsCurrentPresetUserPreset() { return currentIsUserPreset; }
+
     private:
         void valueTreeRedirected(juce::ValueTree &treeWhichHasBeenChanged) override;
 
-        juce::File getPresetFile(const juce::String &presetName);
+        juce::File getUserPresetFile(const juce::String &presetName);
+        const char* getBinaryPresetFile(const juce::String &presetName);
+
+        void updateIsUserPreset();
 
         /*
         Takes in a value tree that is about to be used to replace the apvts state, and first copies over the values
@@ -35,5 +41,6 @@ namespace jr
 
         juce::AudioProcessorValueTreeState &apvts;
         juce::Value currentPreset;
+        bool currentIsUserPreset{ false };
     };
 }

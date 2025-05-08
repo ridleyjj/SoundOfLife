@@ -9,6 +9,7 @@ namespace jr
             .getChildFile("RidleySound")
             .getChildFile("SoundOfLife")};
     const juce::String PresetManager::extension{"preset"};
+    const juce::String PresetManager::underscore{"_"};
     const juce::String PresetManager::presetNameProperty{"presetName"};
     const std::vector<juce::String> PresetManager::excludedParams{ ID::AUTO_GEN_MODE, ID::TEMPO_SYNC_MODE, ID::VELOCITY, ID::FREQUENCY, ID::ACCEPT_MIDI_NOTE_OFF_INPUT };
 
@@ -26,6 +27,7 @@ namespace jr
 
         apvts.state.addListener(this);
         currentPreset.referTo(apvts.state.getPropertyAsValue(presetNameProperty, nullptr));
+        updateIsUserPreset();
     }
 
     void PresetManager::savePreset(const juce::String &presetName)
@@ -35,12 +37,13 @@ namespace jr
 
         currentPreset.setValue(presetName);
         const auto xmlState = apvts.copyState().createXml();
-        const auto presetFile = getPresetFile(presetName);
+        const auto presetFile = getUserPresetFile(presetName);
         if (!xmlState->writeTo(presetFile))
         {
             DBG("Could not create preset file: " + presetFile.getFullPathName());
             jassertfalse;
         }
+        updateIsUserPreset();
     }
 
     void PresetManager::deletePreset(const juce::String &presetName)
@@ -48,7 +51,13 @@ namespace jr
         if (presetName.isEmpty())
             return;
 
-        const auto presetFile = getPresetFile(presetName);
+        if (!currentIsUserPreset)
+        {
+            DBG("Cannot delete non-user presets");
+            return;
+        }
+
+        const auto presetFile = getUserPresetFile(presetName);
         if (!presetFile.existsAsFile())
         {
             DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
@@ -63,6 +72,7 @@ namespace jr
             return;
         }
         currentPreset.setValue("");
+        updateIsUserPreset();
     }
 
     void PresetManager::loadPreset(const juce::String &presetName)
@@ -70,19 +80,31 @@ namespace jr
         if (presetName.isEmpty())
             return;
 
-        const auto presetFile = getPresetFile(presetName);
-        if (!presetFile.existsAsFile())
+        juce::String data;
+        auto presetFile = getUserPresetFile(presetName);
+        if (presetFile.existsAsFile())
         {
-            DBG("Preset file: " + presetFile.getFullPathName() + " does not exist");
-            jassertfalse;
-            return;
+            data = presetFile.loadFileAsString();
+        }
+        else
+        {
+            auto binaryData = getBinaryPresetFile(presetName);
+            if (binaryData == nullptr)
+            {
+                DBG("Preset: " + presetName + " does not exist.");
+                jassertfalse;
+                return;
+            }
+            data = binaryData;
         }
 
-        juce::XmlDocument xmlDocument{presetFile};
+        juce::XmlDocument xmlDocument{ data };
+        
         auto valueTreeToLoad = juce::ValueTree::fromXml(*xmlDocument.getDocumentElement());
         overrideExcludedParams(valueTreeToLoad);
         apvts.replaceState(valueTreeToLoad);
         currentPreset.setValue(presetName);
+        updateIsUserPreset();
     }
 
     void PresetManager::overrideExcludedParams(juce::ValueTree& valueTree)
@@ -96,13 +118,26 @@ namespace jr
 
     juce::StringArray PresetManager::getAllPresets()
     {
-        const auto fileArray = defaultDirectory.findChildFiles(
-            juce::File::TypesOfFileToFind::findFiles, false, "*." + extension);
         juce::StringArray presets;
-        for (const auto &file : fileArray)
+        
+        for (int i = 0; i < BinaryData::namedResourceListSize; i++)
+        {
+            juce::String name = BinaryData::namedResourceList[i];
+            if (name.endsWith(extension))
+            {
+                name = name.replaceCharacter('_', ' ');
+                presets.add(name.dropLastCharacters(extension.length() + 1));
+            }
+        }
+
+        const auto userPresetFiles = defaultDirectory.findChildFiles(
+            juce::File::TypesOfFileToFind::findFiles, false, "*." + extension);
+        for (const auto &file : userPresetFiles)
         {
             presets.add(file.getFileNameWithoutExtension());
         }
+        
+        presets.removeDuplicates(false);
         return presets;
     }
 
@@ -111,10 +146,26 @@ namespace jr
     void PresetManager::valueTreeRedirected(juce::ValueTree &treeWhichHasBeenChanged)
     {
         currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
+        updateIsUserPreset();
     }
 
-    juce::File PresetManager::getPresetFile(const juce::String &presetName)
+    juce::File PresetManager::getUserPresetFile(const juce::String &presetName)
     {
-        return defaultDirectory.getChildFile(presetName + "." + extension);
+        return defaultDirectory.getChildFile(presetName + "." + extension);  
+    }
+
+    const char* PresetManager::getBinaryPresetFile(const juce::String& presetName)
+    {
+        juce::String binaryDataName = presetName.replaceCharacter(' ', '_') + "_" + extension;
+        int size = 0;
+        return BinaryData::getNamedResource(binaryDataName.toUTF8(), size);
+    }
+
+    void PresetManager::updateIsUserPreset()
+    {
+        auto val = currentPreset.getValue().toString();
+        DBG("Current Val " + val);
+        auto userPresetFile = getUserPresetFile(currentPreset.getValue());
+        currentIsUserPreset = userPresetFile.existsAsFile();
     }
 }
