@@ -24,6 +24,16 @@ namespace jr
 
         bool getIsCurrentPresetUserPreset() { return currentIsUserPreset; }
 
+        class Listener
+        {
+            public:
+                virtual void onPresetSelected() = 0;
+        };
+
+        void addListener(Listener* listener) { listeners.push_back(listener); }
+
+        void removeListener(Listener* listener);
+
     private:
         void valueTreeRedirected(juce::ValueTree &treeWhichHasBeenChanged) override;
 
@@ -42,5 +52,9 @@ namespace jr
         juce::AudioProcessorValueTreeState &apvts;
         juce::Value currentPreset;
         bool currentIsUserPreset{ false };
+
+        std::vector<Listener*> listeners;
+
+        void updateListeners();
     };
 }

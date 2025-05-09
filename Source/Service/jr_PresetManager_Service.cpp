@@ -27,7 +27,6 @@ namespace jr
 
         apvts.state.addListener(this);
         currentPreset.referTo(apvts.state.getPropertyAsValue(presetNameProperty, nullptr));
-        updateIsUserPreset();
     }
 
     void PresetManager::savePreset(const juce::String &presetName)
@@ -44,6 +43,7 @@ namespace jr
             jassertfalse;
         }
         updateIsUserPreset();
+        updateListeners();
     }
 
     void PresetManager::deletePreset(const juce::String &presetName)
@@ -73,6 +73,7 @@ namespace jr
         }
         currentPreset.setValue("");
         updateIsUserPreset();
+        updateListeners();
     }
 
     void PresetManager::loadPreset(const juce::String &presetName)
@@ -104,7 +105,6 @@ namespace jr
         overrideExcludedParams(valueTreeToLoad);
         apvts.replaceState(valueTreeToLoad);
         currentPreset.setValue(presetName);
-        updateIsUserPreset();
     }
 
     void PresetManager::overrideExcludedParams(juce::ValueTree& valueTree)
@@ -136,9 +136,16 @@ namespace jr
         {
             presets.add(file.getFileNameWithoutExtension());
         }
-        
+
         presets.removeDuplicates(false);
         return presets;
+    }
+
+    void PresetManager::removeListener(PresetManager::Listener* listener)
+    {
+        auto iter = std::remove(listeners.begin(), listeners.end(), listener); // moves any number of matching values to the end of the vector to be removed
+
+        listeners.erase(iter, listeners.end()); // Efficiently erase removed elements
     }
 
     //================= private methods =====================
@@ -147,6 +154,7 @@ namespace jr
     {
         currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
         updateIsUserPreset();
+        updateListeners();
     }
 
     juce::File PresetManager::getUserPresetFile(const juce::String &presetName)
@@ -164,8 +172,15 @@ namespace jr
     void PresetManager::updateIsUserPreset()
     {
         auto val = currentPreset.getValue().toString();
-        DBG("Current Val " + val);
         auto userPresetFile = getUserPresetFile(currentPreset.getValue());
         currentIsUserPreset = userPresetFile.existsAsFile();
+    }
+
+    void PresetManager::updateListeners()
+    {
+        for (int i{}; i < listeners.size(); i++)
+        {
+            listeners.at(i)->onPresetSelected();
+        }
     }
 }

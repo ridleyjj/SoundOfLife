@@ -5,7 +5,9 @@
 
 namespace jr
 {
-    class PresetPanel : public juce::Component, juce::Button::Listener, juce::ComboBox::Listener
+
+
+    class PresetPanel : public juce::Component, juce::Button::Listener, juce::ComboBox::Listener, PresetManager::Listener
     {
     public:
         PresetPanel(PresetManager &pm) : presetManager(pm)
@@ -17,8 +19,11 @@ namespace jr
             presetList.setMouseCursor(juce::MouseCursor::PointingHandCursor);
             addAndMakeVisible(presetList);
             presetList.addListener(this);
+            presetManager.addListener(this);
 
             loadPresetList();
+
+            onPresetSelected();
         }
 
         ~PresetPanel()
@@ -26,6 +31,7 @@ namespace jr
             saveButton.removeListener(this);
             deleteButton.removeListener(this);
             presetList.removeListener(this);
+            presetManager.removeListener(this);
         }
 
         void resized() override
@@ -34,9 +40,17 @@ namespace jr
             const auto container = getLocalBounds().reduced(margin);
             auto bounds = container;
 
-            deleteButton.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(margin));
+            deleteButtonBounds = bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(margin);
+            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? deleteButtonBounds : juce::Rectangle<int>());
+
             presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(margin));
             saveButton.setBounds(bounds.reduced(margin));
+        }
+
+        void onPresetSelected() override
+        {
+            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? deleteButtonBounds : juce::Rectangle<int>());
+            deleteButton.repaint();
         }
 
     private:
@@ -97,6 +111,8 @@ namespace jr
         juce::TextButton saveButton, deleteButton;
         juce::ComboBox presetList;
         std::unique_ptr<juce::FileChooser> fileChooser;
+
+        juce::Rectangle<int> deleteButtonBounds;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel);
     };
