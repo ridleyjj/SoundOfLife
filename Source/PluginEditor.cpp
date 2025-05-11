@@ -49,7 +49,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     p.addTimerListener(this);
 
-    setSize (400, 650);
+    setSize (600, 650);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
@@ -70,22 +70,37 @@ void SoundOfLifeAudioProcessorEditor::resized()
 {
     auto contentContainer = getBounds();
     auto presetRow = contentContainer.removeFromTop(50);
-    auto topRow = contentContainer.removeFromTop(200);
+    auto sectionA = contentContainer.removeFromTop(200);
+    auto sectionB = sectionA.removeFromRight(sectionA.proportionOfWidth(0.5f));
+    auto sectionRowSize = sectionA.proportionOfHeight(0.33f);
+    int sideSectionSize = 100;
+    auto sectionC = contentContainer.removeFromLeft(sideSectionSize);
+    auto sectionD = contentContainer.removeFromRight(sideSectionSize);
 
     presetPanel.setBounds(presetRow);
 
-    auto firstButtonSection = topRow.removeFromTop(50).reduced(5, 5);
-    nextButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
-    timerButton.setBounds(firstButtonSection.removeFromLeft(contentContainer.proportionOfWidth(0.33f)).reduced(4));
-    randomButton.setBounds(firstButtonSection.reduced(4));
-    
-    frequencySlider.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.34f)).reduced(4, 24));
+    // section A
+    // scale mode
+    // scale selection row
+    acceptNoteOffButton.setBounds(sectionA.removeFromBottom(sectionRowSize).reduced(8));
 
-    acceptNoteOffButton.setBounds(topRow.removeFromTop(topRow.proportionOfHeight(0.33f)).reduced(2));
-    velocitySlider.setBounds(topRow.removeFromTop(topRow.proportionOfHeight(0.5f)).reduced(2, 16));
-    tempoSyncButton.setBounds(topRow.removeFromLeft(contentContainer.proportionOfWidth(0.43f)).reduced(4));
+    // section B
+    auto firstRowSectionB = sectionB.removeFromTop(sectionRowSize);
+    timerButton.setBounds(firstRowSectionB.removeFromLeft(firstRowSectionB.proportionOfWidth(0.5f)).reduced(4));
+    tempoSyncButton.setBounds(firstRowSectionB.reduced(4));
     
-    blinker.setBounds(topRow.reduced(4));
+    frequencySlider.setBounds(sectionB.removeFromTop(sectionRowSize).reduced(4, 16));
+
+    velocitySlider.setBounds(sectionB.reduced(4, 24));
+
+    // section C
+    randomButton.setBounds(sectionC.reduced(4, 179));
+
+    // section D
+    sectionD.removeFromTop(150);
+    sectionD.removeFromBottom(150);
+    nextButton.setBounds(sectionD.removeFromTop(sectionD.proportionOfHeight(0.5f)).reduced(4));
+    blinker.setBounds(sectionD.reduced(4));
 
     lifeGrid->setBounds(contentContainer);
 }

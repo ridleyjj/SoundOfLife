@@ -48,7 +48,7 @@ private:
     juce::TextButton nextButton{ "Next Generation" }, randomButton{ "Randomise" };
     juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" }, acceptNoteOffButton{ "Accept MIDI Note Off Input" };
 
-    juce::Slider frequencySlider{ juce::Slider::SliderStyle::Rotary, juce::Slider::TextBoxBelow };
+    juce::Slider frequencySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::TextBoxBelow };
     juce::Slider velocitySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::NoTextBox };
     juce::Label frequencyLabel, velocityLabel;
 
