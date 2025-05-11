@@ -16,7 +16,7 @@ namespace jr
         int getNoteNumberForScale(const std::array<int, N> scale, int scaleIndex, int baseNote = 0)
         {
             int octave = floor(scaleIndex / N);
-            octave = octave % 9; // wrap octaves to stay in MIDI range
+            octave = octave % 10; // wrap octaves to stay in MIDI range
             scaleIndex = scaleIndex % (N - 1);
             int noteNumber = baseNote + (octave * 12) + scale[scaleIndex];
 
@@ -29,22 +29,22 @@ namespace jr
             return noteNumber;
         }
 
-        int getMajInterval(int index)
+        int getMajInterval(int index, int baseNote = 0)
         {
             return getNoteNumberForScale(majIntervals, index);
         }
 
-        int getMinInterval(int index)
+        int getMinInterval(int index, int baseNote = 0)
         {
             return getNoteNumberForScale(minIntervals, index);
         }
 
-        int getMajPentInterval(int index)
+        int getMajPentInterval(int index, int baseNote = 0)
         {
             return getNoteNumberForScale(majPentIntervals, index);
         }
 
-        int getMinPentInterval(int index)
+        int getMinPentInterval(int index, int baseNote = 0)
         {
             return getNoteNumberForScale(minPentIntervals, index);
         }
