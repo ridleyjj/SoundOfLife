@@ -176,19 +176,7 @@ void SoundOfLifeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     if (isAutoModeOn() && isTempoSyncModeOn() && isNewBeat())
         lifeGridService.nextGeneration();
 
-    double timestamp = juce::Time::getMillisecondCounterHiRes() * 0.001;
-
-    juce::MidiBuffer::Iterator it(midiOutBuffer);
-    juce::MidiMessage currentMessage;
-    int samplePos{};
-
-    while (it.getNextEvent(currentMessage, samplePos))
-    {
-        currentMessage.setTimeStamp(timestamp);
-        midiMessages.addEvent(currentMessage, samplePos);
-    }
-
-    midiOutBuffer.clear();
+    midiQueue.popAllTo(midiMessages);
 }
 
 //==============================================================================
@@ -322,13 +310,12 @@ void SoundOfLifeAudioProcessor::updateSingleCellParamWithValue(int const index, 
 //==============================================================================
 int SoundOfLifeAudioProcessor::getMidiNoteFromCellIndex(int cellIndex)
 {
-    return cellIndex + 23;
 }
 
 void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAlive)
 {
     juce::MidiMessage m = isAlive ? getNoteOnFromCell(cellIndex) : getNoteOffFromCell(cellIndex);
-    midiOutBuffer.addEvent(m, 0);
+    midiQueue.push(m);
 }
 
 juce::MidiMessage SoundOfLifeAudioProcessor::getNoteOnFromCell(int cellIndex)

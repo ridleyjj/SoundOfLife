@@ -14,6 +14,7 @@
 #include "Service/jr_PresetManager_Service.h";
 #include "Service/jr_TimerListener.h";
 #include "Service/id_constants.h"
+#include "Service/jr_MidiQueue.h"
 
 //==============================================================================
 /**
@@ -115,7 +116,7 @@ private:
 
     std::vector<jr::TimerListener*> timerListeners{};
 
-    juce::MidiBuffer midiOutBuffer{};
+    jr::MidiQueue midiQueue{};
 
     double currentNote{};
 

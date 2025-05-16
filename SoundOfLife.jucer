@@ -34,6 +34,7 @@
         <FILE id="x8BmJm" name="id_constants.cpp" compile="1" resource="0"
               file="Source/Service/id_constants.cpp"/>
         <FILE id="dtsMYl" name="id_constants.h" compile="0" resource="0" file="Source/Service/id_constants.h"/>
+        <FILE id="MsZZVX" name="jr_MidiQueue.h" compile="0" resource="0" file="Source/Service/jr_MidiQueue.h"/>
         <FILE id="MRtgkB" name="jr_PresetManager_Service.cpp" compile="1" resource="0"
               file="Source/Service/jr_PresetManager_Service.cpp"/>
         <FILE id="TBaMUR" name="jr_PresetManager_Service.h" compile="0" resource="0"
