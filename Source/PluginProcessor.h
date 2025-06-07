@@ -14,12 +14,13 @@
 #include "Service/jr_PresetManager_Service.h";
 #include "Service/jr_TimerListener.h";
 #include "Service/id_constants.h"
+#include "Service/jr_ScaleManager.h"
 #include "Service/jr_MidiQueue.h"
 
 //==============================================================================
 /**
 */
-class SoundOfLifeAudioProcessor  : public juce::AudioProcessor, public juce::Timer, public jr::LifeGridServiceListener
+class SoundOfLifeAudioProcessor  : public juce::AudioProcessor, public juce::Timer, public jr::LifeGridServiceListener, public jr::ScaleManager::Listener
 {
 public:
     //==============================================================================
@@ -89,6 +90,11 @@ public:
     bool isAutoModeOn() { return (bool)*apvts.getRawParameterValue(ID::AUTO_GEN_MODE); }
     bool isTempoSyncModeOn() { return (bool)*apvts.getRawParameterValue(ID::TEMPO_SYNC_MODE); }
 
+    //==============================================================================
+    jr::ScaleManager& getScaleManager() { return *scaleManager; }
+
+    void beforeScaleModeChanged() override { lifeGridService.clearGrid(); }
+
 private:
     //=================== methods =======================
     void addMidiMessageFromCell(int cellIndex, bool isAlive);
@@ -118,7 +124,9 @@ private:
 
     jr::MidiQueue midiQueue{};
 
-    double currentNote{};
+    double currentNote{}; // used for beat syncing
+
+    std::unique_ptr<jr::ScaleManager> scaleManager;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessor)

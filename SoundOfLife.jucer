@@ -41,6 +41,10 @@
               file="Source/Service/jr_PresetManager_Service.h"/>
         <FILE id="xdmAfF" name="jr_ScaleConstants.h" compile="0" resource="0"
               file="Source/Service/jr_ScaleConstants.h"/>
+        <FILE id="A7NmnO" name="jr_ScaleManager.cpp" compile="1" resource="0"
+              file="Source/Service/jr_ScaleManager.cpp"/>
+        <FILE id="OpAJdZ" name="jr_ScaleManager.h" compile="0" resource="0"
+              file="Source/Service/jr_ScaleManager.h"/>
         <FILE id="Kivwo3" name="jr_TimerListener.h" compile="0" resource="0"
               file="Source/Service/jr_TimerListener.h"/>
         <FILE id="MieT6N" name="LifeGridService.cpp" compile="1" resource="0"
@@ -56,6 +60,7 @@
         <FILE id="IzDE6C" name="CellButton.h" compile="0" resource="0" file="Source/GUI/CellButton.h"/>
         <FILE id="Ik86Sh" name="jr_PresetPanel.h" compile="0" resource="0"
               file="Source/GUI/jr_PresetPanel.h"/>
+        <FILE id="zgkssE" name="jr_ScalePanel.h" compile="0" resource="0" file="Source/GUI/jr_ScalePanel.h"/>
         <FILE id="jcGQTk" name="LifeGridAttachment.cpp" compile="1" resource="0"
               file="Source/GUI/LifeGridAttachment.cpp"/>
         <FILE id="uZ2kg3" name="LifeGridAttachment.h" compile="0" resource="0"

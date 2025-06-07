@@ -151,4 +151,20 @@ namespace jr
 		}
 		changedCells.clear();
 	}
+
+	void LifeGridService::clearGrid()
+	{
+		changedCells.clear();
+
+		auto turnCellOffIfOn = [&](LifeCell* lifeCell, int i, int j)
+			{
+				if (lifeCell->getIsAlive())
+				{
+					changedCells.insert(i * rowSize + j);
+				}
+			};
+		forEachCell(turnCellOffIfOn);
+
+		notifyListeners();
+	}
 }

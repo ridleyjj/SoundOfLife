@@ -64,6 +64,8 @@ namespace jr
             void addListener(LifeGridServiceListener* l);
             void removeListener(LifeGridServiceListener* l);
 
+            void clearGrid();
+
 		private:
             bool getCellNextGeneration(bool isAlive, int m, int n);
             int getNumOfAliveNeighbours(int m, int n);

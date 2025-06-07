@@ -13,7 +13,7 @@
 
 //==============================================================================
 SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), presetPanel(p.getPresetManager())
+    : AudioProcessorEditor (&p), audioProcessor (p), presetPanel(p.getPresetManager()), scalePanel(p.getScaleManager())
 {
     setLookAndFeel(&customLookAndFeel);
     juce::LookAndFeel::setDefaultLookAndFeel(&customLookAndFeel);
@@ -46,6 +46,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     randomButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
 
     addAndMakeVisible(presetPanel);
+    addAndMakeVisible(scalePanel);
 
     p.addTimerListener(this);
 
@@ -80,9 +81,8 @@ void SoundOfLifeAudioProcessorEditor::resized()
     presetPanel.setBounds(presetRow);
 
     // section A
-    // scale mode
-    // scale selection row
-    acceptNoteOffButton.setBounds(sectionA.removeFromBottom(sectionRowSize).reduced(8));
+    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize));
+    acceptNoteOffButton.setBounds(sectionA.removeFromTop(sectionRowSize).reduced(8));
 
     // section B
     auto firstRowSectionB = sectionB.removeFromTop(sectionRowSize);

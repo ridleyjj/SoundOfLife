@@ -17,6 +17,7 @@
 #include "Service/jr_TimerListener.h"
 #include "LookAndFeel/jr_StyleSheet.h"
 #include "GUI/ToggleAttachment.h"
+#include "GUI/jr_ScalePanel.h"
 
 //==============================================================================
 /**
@@ -41,6 +42,8 @@ private:
     jr::CustomLookAndFeel customLookAndFeel;
 
     jr::PresetPanel presetPanel;
+
+    jr::ScalePanel scalePanel;
 
     std::shared_ptr<jr::LifeGridGUI> lifeGrid;
     std::unique_ptr<jr::LifeGridAttachment> gridAttachment;

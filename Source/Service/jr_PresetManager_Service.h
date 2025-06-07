@@ -13,7 +13,7 @@ namespace jr
         static const juce::String presetNameProperty;
         static const std::vector<juce::String> excludedParams;
 
-        PresetManager(juce::AudioProcessorValueTreeState &_apvts);
+        PresetManager(juce::AudioProcessorValueTreeState &apvts);
 
         void savePreset(const juce::String &presetName);
         void deletePreset(const juce::String &presetName);

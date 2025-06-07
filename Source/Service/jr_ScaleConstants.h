@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <array>
+#include <JuceHeader.h>
 
 namespace jr
 {
@@ -9,44 +10,8 @@ namespace jr
     {
         const std::array<int, 7> majIntervals = { 0, 2, 4, 5, 7, 9, 11 };
         const std::array<int, 7> minIntervals = { 0, 2, 3, 5, 7, 8, 10 };
-        const std::array<int, 5> majPentIntervals = { 0, 2, 4, 7, 9 };
-        const std::array<int, 5> minPentIntervals = { 0, 3, 5, 7, 10 };
 
-        template<size_t N>
-        int getNoteNumberForScale(const std::array<int, N> scale, int scaleIndex, int baseNote = 0)
-        {
-            int octave = floor(scaleIndex / N);
-            octave = octave % 10; // wrap octaves to stay in MIDI range
-            scaleIndex = scaleIndex % (N - 1);
-            int noteNumber = baseNote + (octave * 12) + scale[scaleIndex];
-
-            // only return valid MIDI
-            while (noteNumber > 127)
-            {
-                noteNumber -= 12;
-            }
-
-            return noteNumber;
-        }
-
-        int getMajInterval(int index, int baseNote = 0)
-        {
-            return getNoteNumberForScale(majIntervals, index);
-        }
-
-        int getMinInterval(int index, int baseNote = 0)
-        {
-            return getNoteNumberForScale(minIntervals, index);
-        }
-
-        int getMajPentInterval(int index, int baseNote = 0)
-        {
-            return getNoteNumberForScale(majPentIntervals, index);
-        }
-
-        int getMinPentInterval(int index, int baseNote = 0)
-        {
-            return getNoteNumberForScale(minPentIntervals, index);
-        }
+        const juce::StringArray scaleTypes{ "Chromatic", "Major", "Minor" };
+        const juce::StringArray baseNotes{ "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B" };
     }
 }

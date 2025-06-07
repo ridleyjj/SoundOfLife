@@ -6,7 +6,6 @@
 namespace jr
 {
 
-
     class PresetPanel : public juce::Component, juce::Button::Listener, juce::ComboBox::Listener, PresetManager::Listener
     {
     public:

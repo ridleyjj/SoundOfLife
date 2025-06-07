@@ -9,4 +9,6 @@ namespace ID
     const juce::String ACCEPT_MIDI_NOTE_OFF_INPUT{ "Accepts MIDI Note Off Inputs" };
     const juce::String VELOCITY{ "Velocity" };
     const juce::String FREQUENCY{ "Frequency" };
+    const juce::String SCALE_TYPE{ "Scale Type" };
+    const juce::String BASE_NOTE{ "Base Note" };
 }

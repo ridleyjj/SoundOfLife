@@ -29,6 +29,10 @@ SoundOfLifeAudioProcessor::SoundOfLifeAudioProcessor()
 
     lifeGridService.addListener(this);
 
+    scaleManager = std::make_unique<jr::ScaleManager>(apvts);
+
+    scaleManager->addListener(this);
+
     startTimer(getTimerIntervalMs());
 }
 
@@ -36,6 +40,7 @@ SoundOfLifeAudioProcessor::~SoundOfLifeAudioProcessor()
 {
     removeListenersFromApvts();
     lifeGridService.removeListener(this);
+    scaleManager->removeListener(this);
 }
 
 //==============================================================================
@@ -248,6 +253,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SoundOfLifeAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::ACCEPT_MIDI_NOTE_OFF_INPUT, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, true));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::VELOCITY, ID::VELOCITY, 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterInt>(ID::FREQUENCY, ID::FREQUENCY, 250, 2000, 1000));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::SCALE_TYPE, ID::SCALE_TYPE, 0, 2, 0));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::BASE_NOTE, ID::BASE_NOTE, 0, 11, 0));
     
     return layout;
 }
@@ -310,6 +317,7 @@ void SoundOfLifeAudioProcessor::updateSingleCellParamWithValue(int const index, 
 //==============================================================================
 int SoundOfLifeAudioProcessor::getMidiNoteFromCellIndex(int cellIndex)
 {
+    return scaleManager->getNoteNumberFromScaleIndex(cellIndex);
 }
 
 void SoundOfLifeAudioProcessor::addMidiMessageFromCell(int cellIndex, bool isAlive)
