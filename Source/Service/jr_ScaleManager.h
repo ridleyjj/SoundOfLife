@@ -19,6 +19,7 @@ namespace jr
 		{ 
 			notifyListeners();
 			*scaleTypeIndexParameter = selectedIndex;
+
 		}
 		
 		void selectBaseNoteByIndex(const int selectedIndex)
@@ -43,7 +44,15 @@ namespace jr
 
 		void removeListener(Listener* listener);
 
+		/**
+		This method returns the cellIndex between 0-63 which is associated with the given MIDI note number.
+		If the provided note number is either not in the currently selected scale, or is out of range of the grid, -1 is returned
+		*/
+		int getCellIndexFromNoteNumber(int noteNumber);
+		
 	private:
+		const int chromaticStartIndex = 12;
+
 		juce::AudioParameterInt* baseNoteIndexParameter;
 		juce::AudioParameterInt* scaleTypeIndexParameter;
 
@@ -51,6 +60,9 @@ namespace jr
 
         template<size_t N>
 		int getNoteNumberForScale(const std::array<int, N> scale, int scaleIndex);
+
+		template<size_t N>
+		int getCellIndexFromNoteNumberForScale(const std::array<int, N> scale, int noteNumber);
 
 		std::vector<Listener*> listeners;
 

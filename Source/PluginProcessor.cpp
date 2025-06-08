@@ -346,11 +346,12 @@ void SoundOfLifeAudioProcessor::processIncomingMidiMessages(juce::MidiBuffer& mi
             auto message = metadata.getMessage();
             if (message.isNoteOn() || (apvts.getParameter(ID::ACCEPT_MIDI_NOTE_OFF_INPUT)->getValue() && message.isNoteOff()))
             {
-                int numCells = lifeGridService.numRows * lifeGridService.rowSize;
-                if (message.getNoteNumber() >= 23 && message.getNoteNumber() < getMidiNoteFromCellIndex(numCells))
-                {
-                    updateSingleCellParamWithValue(getCellIndexFromMidiNote(message.getNoteNumber()), message.isNoteOn());
-                }
+                int cellIndex = scaleManager->getCellIndexFromNoteNumber(message.getNoteNumber());
+
+                if (cellIndex == -1)
+                    continue;
+
+                updateSingleCellParamWithValue(cellIndex, message.isNoteOn());
             }
         }
     }

@@ -24,7 +24,7 @@ namespace jr
 			noteNumber = getNoteNumberForScale(ScaleConstants::minIntervals, scaleIndex);
 			break;
 		default:
-			noteNumber = 12 + getCurrentBaseNoteIndex() + scaleIndex; // chromatic
+			noteNumber = chromaticStartIndex + getCurrentBaseNoteIndex() + scaleIndex; // chromatic
 			break;
 		}
 
@@ -37,7 +37,7 @@ namespace jr
 		int baseNote = getCurrentBaseNoteIndex();
 		int octave = floor(scaleIndex / N);
 		octave = octave % 10; // wrap octaves to stay in MIDI range
-		scaleIndex = scaleIndex % (N - 1);
+		scaleIndex = scaleIndex % N;
 		int noteNumber = baseNote + (octave * 12) + scale[scaleIndex];
 
 		// only return valid MIDI
@@ -61,5 +61,67 @@ namespace jr
 		{
 			l->beforeScaleModeChanged();
 		}
+	}
+
+	int ScaleManager::getCellIndexFromNoteNumber(int noteNumber)
+	{
+		switch (getCurrentScaleTypeIndex())
+		{
+			case 1:
+			{
+				// Major
+				return getCellIndexFromNoteNumberForScale(ScaleConstants::majIntervals, noteNumber);
+			}
+			case 2:
+			{
+				// Minor
+				return getCellIndexFromNoteNumberForScale(ScaleConstants::minIntervals, noteNumber);
+			}
+			default:
+			{
+				// Chromatic
+				noteNumber -= getCurrentBaseNoteIndex();
+				noteNumber -= chromaticStartIndex;
+				if (noteNumber < -1 || noteNumber > 63)
+					noteNumber = -1;
+				return noteNumber;
+			}
+		}
+	}
+
+	template<size_t N>
+	int ScaleManager::getCellIndexFromNoteNumberForScale(const std::array<int, N> scale, int noteNumber)
+	{
+		// convert to C scale
+		int degree = noteNumber - getCurrentBaseNoteIndex();
+
+		// find octave
+		int octave = floor(degree / 12.0f);
+
+		// convert to 0-12
+		degree = degree % 12;
+
+		int degreeIndex = -1;
+
+		for (int i = 0; i < scale.size(); i++)
+		{
+			if (degree == scale.at(i))
+			{
+				degreeIndex = i;
+				break;
+			}
+		}
+
+		if (degreeIndex == -1)
+		{
+			return -1;
+		}
+
+		int cellIndex = octave * scale.size() + degreeIndex;
+
+		if (cellIndex > 63)
+			cellIndex = -1;
+
+		return cellIndex;
 	}
 }
