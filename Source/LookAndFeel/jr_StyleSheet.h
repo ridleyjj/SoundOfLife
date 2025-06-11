@@ -20,6 +20,8 @@ namespace jr
         CustomLookAndFeel()
         {
             setDefaultSansSerifTypeface(StyleSheet::boldFont);
+            setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+            setColour(juce::ComboBox::textColourId, juce::Colours::black);
         }
 
         void drawButtonBackground(juce::Graphics& g,
@@ -28,9 +30,9 @@ namespace jr
             bool shouldDrawButtonAsHighlighted,
             bool shouldDrawButtonAsDown) override
         {
-            auto mainColour = buttonColour;
+            auto mainColour = juce::Colours::white;
 
-            auto cornerSize = 2.0f;
+            auto cornerSize = 0.0f;
             auto bounds = button.getLocalBounds().toFloat().reduced(0.5f, 0.5f);
 
             auto baseColour = mainColour.withMultipliedSaturation(button.hasKeyboardFocus(true) ? 1.3f : 0.9f)
@@ -39,7 +41,7 @@ namespace jr
             if (shouldDrawButtonAsDown || shouldDrawButtonAsHighlighted)
                 baseColour = baseColour.contrasting(shouldDrawButtonAsDown ? 0.2f : 0.05f);
 
-            g.setColour(baseColour);
+            juce::Colour borderColour = juce::Colours::black;
 
             auto flatOnLeft = button.isConnectedOnLeft();
             auto flatOnRight = button.isConnectedOnRight();
@@ -61,18 +63,22 @@ namespace jr
             }
             else
             {
+                g.setColour(baseColour);
                 g.fillRoundedRectangle(bounds, cornerSize);
+                g.setColour(borderColour);
+                g.drawRect(bounds, 2.0f);
             }
         }
 
         void drawComboBox(juce::Graphics& g, int width, int height, bool,
             int, int, int, int, juce::ComboBox& box) override
         {
-            auto cornerSize = box.findParentComponentOfClass<juce::ChoicePropertyComponent>() != nullptr ? 0.0f : 3.0f;
             juce::Rectangle<int> boxBounds(0, 0, width, height);
 
-            g.setColour(buttonColour);
-            g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
+            g.setColour(juce::Colours::white);
+            g.fillRect(boxBounds.toFloat());
+            g.setColour(juce::Colours::black);
+            g.drawRect(boxBounds.toFloat(), 2.0f);
 
             juce::Rectangle<int> arrowZone(width - 30, 0, 20, height);
             juce::Path path;
@@ -80,13 +86,13 @@ namespace jr
             path.lineTo((float)arrowZone.getCentreX(), (float)arrowZone.getCentreY() + 3.0f);
             path.lineTo((float)arrowZone.getRight() - 3.0f, (float)arrowZone.getCentreY() - 2.0f);
 
-            g.setColour(box.findColour(juce::ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 0.9f : 0.2f)));
+            g.setColour(juce::Colours::black.withAlpha((box.isEnabled() ? 0.9f : 0.2f)));
             g.strokePath(path, juce::PathStrokeType(2.0f));
         }
 
         void drawPopupMenuBackground(juce::Graphics& g, [[maybe_unused]] int width, [[maybe_unused]] int height) override
         {
-            g.fillAll(buttonColour);
+            g.fillAll(juce::Colours::white);
         }
 
         void drawPopupMenuItem(juce::Graphics& g, const juce::Rectangle<int>& area,
@@ -106,17 +112,16 @@ namespace jr
             }
             else
             {
-                auto textColour = (textColourToUse == nullptr ? findColour(juce::PopupMenu::textColourId)
-                    : *textColourToUse);
+                auto textColour = juce::Colours::black;
 
                 auto r = area.reduced(1);
 
                 if (isHighlighted && isActive)
                 {
-                    g.setColour(darkerButtonColour);
+                    g.setColour(juce::Colours::lightgrey);
                     g.fillRect(r);
 
-                    g.setColour(findColour(juce::PopupMenu::highlightedTextColourId));
+                    g.setColour(juce::Colours::black);
                 }
                 else
                 {
