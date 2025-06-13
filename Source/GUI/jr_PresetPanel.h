@@ -48,12 +48,12 @@ namespace jr
 
             saveButton.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(xMargin, yMargin));
 
-            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? bounds.reduced(xMargin, yMargin) : juce::Rectangle<int>());
+            deleteButton.setBounds(bounds.reduced(xMargin, yMargin));
         }
 
         void onPresetSelected() override
         {
-            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? deleteButtonBounds : juce::Rectangle<int>());
+            deleteButton.setEnabled(presetManager.getIsCurrentPresetUserPreset());
             deleteButton.repaint();
         }
 
