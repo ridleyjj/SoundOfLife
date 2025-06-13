@@ -48,7 +48,7 @@ private:
     std::shared_ptr<jr::LifeGridGUI> lifeGrid;
     std::unique_ptr<jr::LifeGridAttachment> gridAttachment;
 
-    juce::TextButton nextButton{ "Next Generation" }, randomButton{ "Randomise" };
+    juce::TextButton nextButton{ "Next Generation" }, randomButton{ "Randomise" }, clearButton{ "Clear" };
     juce::ToggleButton timerButton{ "Auto On/Off" }, tempoSyncButton{ "Tempo Sync On/Off" }, acceptNoteOffButton{ "Accept MIDI Note Off Input" };
 
     juce::Slider frequencySlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::TextBoxBelow };

@@ -28,6 +28,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     addAndMakeVisible(randomButton);
     addAndMakeVisible(blinker);
     addAndMakeVisible(acceptNoteOffButton);
+    addAndMakeVisible(clearButton);
 
     jr::JuceUtils::initSimpleSliderWithRange(this, &frequencySlider, &frequencyLabel, "Interval (ms)", 250, 2000, 1, true);
     frequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.getAPVTS(), ID::FREQUENCY, frequencySlider);
@@ -41,6 +42,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     nextButton.onClick = [&]() { audioProcessor.getLifeGridService().nextGeneration(); };
     randomButton.onClick = [&]() { audioProcessor.getLifeGridService().randomiseSetup(); };
+    clearButton.onClick = [&]() { audioProcessor.getLifeGridService().clearGrid(); };
 
     nextButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
     randomButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
@@ -103,9 +105,10 @@ void SoundOfLifeAudioProcessorEditor::resized()
 
     sectionCBox = sectionC.reduced(1);
     sectionC = sectionC.reduced(1);
-    auto buttonRow = sectionC.removeFromTop(54).reduced(34, 6);
-    nextButton.setBounds(buttonRow.removeFromLeft(200));
+    auto buttonRow = sectionC.removeFromTop(54).reduced(19, 6);
+    nextButton.setBounds(buttonRow.removeFromLeft(200).reduced(15, 0));
     randomButton.setBounds(buttonRow.removeFromLeft(160).reduced(15, 0));
+    clearButton.setBounds(buttonRow.reduced(15, 0));
     sectionC.removeFromBottom(4);
     lifeGrid->setBounds(sectionC);
 }
