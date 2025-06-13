@@ -64,7 +64,7 @@ SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
 void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(juce::Colour::fromRGB(96, 113, 150));
+    g.fillAll(juce::Colours::white);
 }
 
 void SoundOfLifeAudioProcessorEditor::resized()
@@ -91,7 +91,7 @@ void SoundOfLifeAudioProcessorEditor::resized()
     
     frequencySlider.setBounds(sectionB.removeFromTop(sectionRowSize).reduced(4, 16));
 
-    velocitySlider.setBounds(sectionB.reduced(4, 24));
+    velocitySlider.setBounds(sectionB.removeFromTop(sectionRowSize).reduced(4, 16));
 
     // section C
     randomButton.setBounds(sectionC.reduced(4, 179));

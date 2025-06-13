@@ -22,6 +22,16 @@ namespace jr
             setDefaultSansSerifTypeface(StyleSheet::boldFont);
             setColour(juce::TextButton::textColourOffId, juce::Colours::black);
             setColour(juce::ComboBox::textColourId, juce::Colours::black);
+            setColour(juce::ToggleButton::textColourId, juce::Colours::black);
+            setColour(juce::Label::textColourId, juce::Colours::black);
+            setColour(juce::Label::textWhenEditingColourId, juce::Colours::black);
+            setColour(juce::Label::outlineWhenEditingColourId, juce::Colours::black);
+            setColour(juce::Label::backgroundWhenEditingColourId, juce::Colours::white);
+            setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
+            setColour(juce::TextEditor::textColourId, juce::Colours::black);
+            setColour(juce::TextEditor::highlightedTextColourId, juce::Colours::black);
+            setColour(juce::ToggleButton::tickColourId, juce::Colours::black);
+            setColour(juce::ToggleButton::textColourId, juce::Colours::black);
         }
 
         void drawButtonBackground(juce::Graphics& g,
@@ -179,6 +189,140 @@ namespace jr
 
                     g.drawText(shortcutKeyText, r, juce::Justification::centredRight, true);
                 }
+            }
+        }
+
+        void drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
+            float sliderPos, float minSliderPos, float maxSliderPos,
+            juce::Slider::SliderStyle style, juce::Slider& slider) override {
+            if (slider.isBar())
+            {
+               // not implemented
+            }
+            else
+            {
+                auto isTwoVal = (style == juce::Slider::SliderStyle::TwoValueVertical || style == juce::Slider::SliderStyle::TwoValueHorizontal);
+                auto isThreeVal = (style == juce::Slider::SliderStyle::ThreeValueVertical || style == juce::Slider::SliderStyle::ThreeValueHorizontal);
+
+                auto const trackWidth = 4.0f;
+
+                juce::Point<float> startPoint(slider.isHorizontal() ? (float)x : (float)x + (float)width * 0.5f,
+                    slider.isHorizontal() ? (float)y + (float)height * 0.5f : (float)(height + y));
+
+                juce::Point<float> endPoint(slider.isHorizontal() ? (float)(width + x) : startPoint.x,
+                    slider.isHorizontal() ? startPoint.y : (float)y);
+
+                juce::Path backgroundTrack;
+                backgroundTrack.startNewSubPath(startPoint);
+                backgroundTrack.lineTo(endPoint);
+                g.setColour(slider.findColour(juce::Slider::backgroundColourId));
+                g.strokePath(backgroundTrack, { trackWidth, juce::PathStrokeType::curved, juce::PathStrokeType::butt });
+
+                juce::Path valueTrack;
+                juce::Point<float> minPoint, maxPoint, thumbPoint;
+
+                if (isTwoVal || isThreeVal)
+                {
+                    minPoint = { slider.isHorizontal() ? minSliderPos : (float)width * 0.5f,
+                                 slider.isHorizontal() ? (float)height * 0.5f : minSliderPos };
+
+                    if (isThreeVal)
+                        thumbPoint = { slider.isHorizontal() ? sliderPos : (float)width * 0.5f,
+                                       slider.isHorizontal() ? (float)height * 0.5f : sliderPos };
+
+                    maxPoint = { slider.isHorizontal() ? maxSliderPos : (float)width * 0.5f,
+                                 slider.isHorizontal() ? (float)height * 0.5f : maxSliderPos };
+                }
+                else
+                {
+                    auto kx = slider.isHorizontal() ? sliderPos : ((float)x + (float)width * 0.5f);
+                    auto ky = slider.isHorizontal() ? ((float)y + (float)height * 0.5f) : sliderPos;
+
+                    minPoint = startPoint;
+                    maxPoint = { kx, ky };
+                }
+
+                auto thumbWidth = 12.0f;
+
+                valueTrack.startNewSubPath(minPoint);
+                valueTrack.lineTo(isThreeVal ? thumbPoint : maxPoint);
+                g.setColour(slider.findColour(juce::Slider::trackColourId));
+                g.strokePath(valueTrack, { trackWidth, juce::PathStrokeType::curved, juce::PathStrokeType::butt });
+
+                if (!isTwoVal)
+                {
+                    auto valueMarkerRect = juce::Rectangle<float>(thumbWidth, thumbWidth).withCentre(isThreeVal ? thumbPoint : maxPoint);
+                    g.setColour(juce::Colours::white);
+                    g.fillRect(valueMarkerRect);
+                    g.setColour(juce::Colours::black);
+                    g.drawRect(valueMarkerRect, 2.0f);
+                }
+
+                if (isTwoVal || isThreeVal)
+                {
+                    auto sr = juce::jmin(trackWidth, (slider.isHorizontal() ? (float)height : (float)width) * 0.4f);
+                    auto pointerColour = slider.findColour(juce::Slider::thumbColourId);
+
+                    if (slider.isHorizontal())
+                    {
+                        drawPointer(g, minSliderPos - sr,
+                            juce::jmax(0.0f, (float)y + (float)height * 0.5f - trackWidth * 2.0f),
+                            trackWidth * 2.0f, pointerColour, 2);
+
+                        drawPointer(g, maxSliderPos - trackWidth,
+                            juce::jmin((float)(y + height) - trackWidth * 2.0f, (float)y + (float)height * 0.5f),
+                            trackWidth * 2.0f, pointerColour, 4);
+                    }
+                    else
+                    {
+                        drawPointer(g, juce::jmax(0.0f, (float)x + (float)width * 0.5f - trackWidth * 2.0f),
+                            minSliderPos - trackWidth,
+                            trackWidth * 2.0f, pointerColour, 1);
+
+                        drawPointer(g, juce::jmin((float)(x + width) - trackWidth * 2.0f, (float)x + (float)width * 0.5f), maxSliderPos - sr,
+                            trackWidth * 2.0f, pointerColour, 3);
+                    }
+                }
+            }
+        }
+
+        void drawTickBox(juce::Graphics& g, juce::Component& component,
+            float x, float y, float w, float h,
+            const bool ticked,
+            [[maybe_unused]] const bool isEnabled,
+            [[maybe_unused]] const bool shouldDrawButtonAsHighlighted,
+            [[maybe_unused]] const bool shouldDrawButtonAsDown)
+        {
+            juce::Rectangle<float> tickBounds(x, y, w, h);
+
+            g.setColour(component.findColour(juce::ToggleButton::tickColourId));
+            g.drawRect(tickBounds, 2.0f);
+
+            if (ticked)
+            {
+                g.setColour(component.findColour(juce::ToggleButton::tickColourId));
+                auto tick = getTickShape(0.75f);
+                g.fillPath(tick, tick.getTransformToScaleToFit(tickBounds.reduced(4, 5).toFloat(), false));
+            }
+        }
+
+        void drawLabel(juce::Graphics& g, juce::Label& label) override
+        {
+            g.fillAll(label.findColour(juce::Label::backgroundColourId));
+
+            if (!label.isBeingEdited())
+            {
+                auto alpha = label.isEnabled() ? 1.0f : 0.5f;
+                const juce::Font font(getLabelFont(label));
+
+                g.setColour(juce::Colours::black);
+                g.setFont(font);
+
+                auto textArea = getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
+
+                g.drawFittedText(label.getText(), textArea, label.getJustificationType(),
+                    juce::jmax(1, (int)((float)textArea.getHeight() / font.getHeight())),
+                    label.getMinimumHorizontalScale());
             }
         }
 
