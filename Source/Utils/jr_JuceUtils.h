@@ -15,7 +15,7 @@ namespace jr
 
             // text label init
             label->setText(name, juce::NotificationType::dontSendNotification);
-            label->setJustificationType(juce::Justification::centredTop);
+            label->setJustificationType(juce::Justification::topLeft);
             label->attachToComponent(slider, false);
         }
 

@@ -59,6 +59,10 @@ private:
 
     jr::Blinker blinker;
 
+    juce::Rectangle<int> sectionABox, sectionBBox, sectionCBox;
+
+    juce::Label sectionALabel{ "sectionALabel", "MIDI Note Output" }, sectionBLabel{ "sectionBLabel", "Timing" };
+
     std::unique_ptr<jr::ToggleButtonAttachment> timerToggleAttachment, tempoSyncToggleAttachment, acceptNoteOffToggleAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundOfLifeAudioProcessorEditor)

@@ -47,10 +47,12 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     addAndMakeVisible(presetPanel);
     addAndMakeVisible(scalePanel);
+    addAndMakeVisible(sectionALabel);
+    addAndMakeVisible(sectionBLabel);
 
     p.addTimerListener(this);
 
-    setSize (600, 650);
+    setSize (550, 810);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
@@ -65,44 +67,47 @@ void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colours::white);
+    g.setColour(juce::Colours::black);
+    g.drawRect(sectionABox, 2.0f);
+    g.drawRect(sectionBBox, 2.0f);
+    g.drawRect(sectionCBox, 2.0f);
 }
 
 void SoundOfLifeAudioProcessorEditor::resized()
 {
     auto contentContainer = getBounds();
-    auto presetRow = contentContainer.removeFromTop(50);
-    auto sectionA = contentContainer.removeFromTop(200);
+    auto presetRow = contentContainer.removeFromTop(85);
+    auto sectionA = contentContainer.removeFromTop(185);
     auto sectionB = sectionA.removeFromRight(sectionA.proportionOfWidth(0.5f));
-    auto sectionRowSize = sectionA.proportionOfHeight(0.33f);
-    int sideSectionSize = 100;
-    auto sectionC = contentContainer.removeFromLeft(sideSectionSize);
-    auto sectionD = contentContainer.removeFromRight(sideSectionSize);
+
+    auto sectionLabelSize = sectionA.proportionOfHeight(0.15f);
+    auto sectionRowSize = sectionA.proportionOfHeight(0.25f);
+
+    auto sectionC = contentContainer;
 
     presetPanel.setBounds(presetRow);
 
     // section A
-    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize));
-    acceptNoteOffButton.setBounds(sectionA.removeFromTop(sectionRowSize).reduced(8));
+    sectionABox = sectionA.reduced(1);
+    sectionALabel.setBounds(sectionA.removeFromTop(sectionLabelSize).reduced(4));
+    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize * 2.0f).reduced(4));
+    velocitySlider.setBounds(sectionA.reduced(4, 16));
 
     // section B
-    auto firstRowSectionB = sectionB.removeFromTop(sectionRowSize);
-    timerButton.setBounds(firstRowSectionB.removeFromLeft(firstRowSectionB.proportionOfWidth(0.5f)).reduced(4));
-    tempoSyncButton.setBounds(firstRowSectionB.reduced(4));
-    
-    frequencySlider.setBounds(sectionB.removeFromTop(sectionRowSize).reduced(4, 16));
+    sectionBBox = sectionB.reduced(1);
+    sectionBLabel.setBounds(sectionB.removeFromTop(sectionLabelSize).reduced(4));
+    timerButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
+    tempoSyncButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
+    sectionB.removeFromTop(sectionRowSize * 0.4f); // spacer between checboxes and slider
+    frequencySlider.setBounds(sectionB.reduced(4, 16));
 
-    velocitySlider.setBounds(sectionB.removeFromTop(sectionRowSize).reduced(4, 16));
-
-    // section C
-    randomButton.setBounds(sectionC.reduced(4, 179));
-
-    // section D
-    sectionD.removeFromTop(150);
-    sectionD.removeFromBottom(150);
-    nextButton.setBounds(sectionD.removeFromTop(sectionD.proportionOfHeight(0.5f)).reduced(4));
-    blinker.setBounds(sectionD.reduced(4));
-
-    lifeGrid->setBounds(contentContainer);
+    sectionCBox = sectionC.reduced(1);
+    sectionC = sectionC.reduced(1);
+    auto buttonRow = sectionC.removeFromTop(54).reduced(34, 6);
+    nextButton.setBounds(buttonRow.removeFromLeft(200));
+    randomButton.setBounds(buttonRow.removeFromLeft(160).reduced(15, 0));
+    sectionC.removeFromBottom(4);
+    lifeGrid->setBounds(sectionC);
 }
 
 //============================= Callbacks ================================

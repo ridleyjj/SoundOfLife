@@ -10,6 +10,8 @@ namespace jr
 	public:
 		ScalePanel(ScaleManager& sm) : scaleManager(sm)
 		{
+			addAndMakeVisible(panelLabel);
+
 			configureComboBox(noteSelectionBox);
 			configureComboBox(scaleSelectionBox);
 
@@ -23,9 +25,12 @@ namespace jr
 			const int margin = 8;
 			const auto container = getLocalBounds().reduced(margin);
 			auto bounds = container;
+			
+			panelLabel.setBounds(bounds.removeFromTop(container.proportionOfHeight(0.25f)).reduced(0, 4));
+			bounds.removeFromBottom(container.proportionOfHeight(0.2f)); // spacer at bottom of panel
 
-			noteSelectionBox.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.35f)).reduced(margin));
-			scaleSelectionBox.setBounds(bounds.reduced(margin));
+			noteSelectionBox.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.35f)));
+			scaleSelectionBox.setBounds(bounds.reduced(margin, 0));
 		}
 
 	private:
@@ -68,5 +73,7 @@ namespace jr
 		juce::ComboBox noteSelectionBox;
 
 		juce::ComboBox scaleSelectionBox;
+
+		juce::Label panelLabel{ "scaleLabel", "Scale" };
 	};
 }

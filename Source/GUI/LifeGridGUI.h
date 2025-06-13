@@ -33,6 +33,8 @@ namespace jr
 
             void resized() override;
 
+            void paint(juce::Graphics& g) override;
+
             void onCellClick(int m, int n) override;
 
             void updateCellIsAlive(CellButton* cell, bool isAlive);
@@ -57,6 +59,8 @@ namespace jr
             CellButton2DGrid cellGrid;
             int rowSize{};
             int numRows{};
+
+            juce::Rectangle<int> outlineBounds{};
 
             std::vector<LifeGridGUIListener*> listeners;
     };

@@ -11,6 +11,8 @@ namespace jr
     public:
         PresetPanel(PresetManager &pm) : presetManager(pm)
         {
+            addAndMakeVisible(label);
+
             configureButton(saveButton, "Save");
             configureButton(deleteButton, "Delete");
 
@@ -35,21 +37,30 @@ namespace jr
 
         void resized() override
         {
-            const int margin = 4;
-            const auto container = getLocalBounds().reduced(margin);
+            const int xMargin = 4;
+            const int yMargin = 6;
+            const auto container = getLocalBounds().reduced(xMargin);
             auto bounds = container;
 
-            deleteButtonBounds = bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(margin);
-            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? deleteButtonBounds : juce::Rectangle<int>());
+            label.setBounds(bounds.removeFromTop(25));
 
-            presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(margin));
-            saveButton.setBounds(bounds.reduced(margin));
+            presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(xMargin, yMargin));
+
+            saveButton.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.2f)).reduced(xMargin, yMargin));
+
+            deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? bounds.reduced(xMargin, yMargin) : juce::Rectangle<int>());
         }
 
         void onPresetSelected() override
         {
             deleteButton.setBounds(presetManager.getIsCurrentPresetUserPreset() ? deleteButtonBounds : juce::Rectangle<int>());
             deleteButton.repaint();
+        }
+
+        void paint(juce::Graphics& g) override
+        {
+            g.setColour(juce::Colours::black);
+            g.drawRect(getLocalBounds().reduced(1), 2.0f);
         }
 
     private:
@@ -112,6 +123,8 @@ namespace jr
         std::unique_ptr<juce::FileChooser> fileChooser;
 
         juce::Rectangle<int> deleteButtonBounds;
+
+        juce::Label label{ "presetPanelLabel", "Presets" };
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetPanel);
     };

@@ -72,6 +72,8 @@ namespace jr
         auto vMargins = container.getHeight() - (cellSize * numRows);
 
         container = container.reduced(hMargins / 2.0f, vMargins / 2.0f);
+        outlineBounds = container;
+        container = container.reduced(1); // leaves room for the outline
 
         for (int rowNum{}; rowNum < numRows; rowNum++)
         {
@@ -82,6 +84,12 @@ namespace jr
                 cellGrid.at(rowNum)->at(cellIndex)->setBounds(bounds);
             }
         }
+    }
+
+    void LifeGridGUI::paint(juce::Graphics& g)
+    {
+        g.setColour(juce::Colours::black);
+        g.drawRect(outlineBounds);
     }
 
     void LifeGridGUI::updateCellIsAlive(CellButton* cell, bool isAlive)
