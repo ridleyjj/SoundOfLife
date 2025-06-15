@@ -55,6 +55,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
     p.addTimerListener(this);
 
     setSize (550, 810);
+    setResizable(false, false);
 }
 
 SoundOfLifeAudioProcessorEditor::~SoundOfLifeAudioProcessorEditor()
@@ -91,23 +92,25 @@ void SoundOfLifeAudioProcessorEditor::resized()
 
     // section A
     sectionABox = sectionA.reduced(1);
+    sectionA.removeFromTop(4); // top margin for label
     sectionALabel.setBounds(sectionA.removeFromTop(sectionLabelSize).reduced(4));
-    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize * 2.0f).reduced(4));
-    velocitySlider.setBounds(sectionA.reduced(4, 16));
+    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize * 2.0f).reduced(4, 0));
+    velocitySlider.setBounds(sectionA.reduced(4, 12));
 
     // section B
     sectionBBox = sectionB.reduced(1);
+    sectionB.removeFromTop(4); // top margin for label
     sectionBLabel.setBounds(sectionB.removeFromTop(sectionLabelSize).reduced(4));
     timerButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
     tempoSyncButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
-    sectionB.removeFromTop(sectionRowSize * 0.4f); // spacer between checboxes and slider
-    frequencySlider.setBounds(sectionB.reduced(4, 16));
+    sectionB.removeFromTop(sectionRowSize * 0.4f); // spacer between checkboxes and slider
+    frequencySlider.setBounds(sectionB.reduced(4, 12));
 
     sectionCBox = sectionC.reduced(1);
     sectionC = sectionC.reduced(1);
     auto buttonRow = sectionC.removeFromTop(54).reduced(19, 6);
-    nextButton.setBounds(buttonRow.removeFromLeft(200).reduced(15, 0));
-    randomButton.setBounds(buttonRow.removeFromLeft(160).reduced(15, 0));
+    nextButton.setBounds(buttonRow.removeFromLeft(230).reduced(15, 0));
+    randomButton.setBounds(buttonRow.removeFromLeft(170).reduced(15, 0));
     clearButton.setBounds(buttonRow.reduced(15, 0));
     sectionC.removeFromBottom(4);
     lifeGrid->setBounds(sectionC);

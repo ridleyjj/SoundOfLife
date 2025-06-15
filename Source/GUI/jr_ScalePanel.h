@@ -26,7 +26,7 @@ namespace jr
 			const auto container = getLocalBounds().reduced(margin);
 			auto bounds = container;
 			
-			panelLabel.setBounds(bounds.removeFromTop(container.proportionOfHeight(0.25f)).reduced(0, 4));
+			panelLabel.setBounds(bounds.removeFromTop(container.proportionOfHeight(0.25f)));
 			bounds.removeFromBottom(container.proportionOfHeight(0.2f)); // spacer at bottom of panel
 
 			noteSelectionBox.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.35f)));
