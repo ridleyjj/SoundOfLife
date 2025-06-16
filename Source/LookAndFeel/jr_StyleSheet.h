@@ -32,6 +32,16 @@ namespace jr
             setColour(juce::ToggleButton::textColourId, juce::Colours::black);
         }
 
+        juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
+        {
+            return withDefaultMetrics(juce::FontOptions{ juce::jmin(10.0f, (float)buttonHeight * 0.4f) });
+        }
+
+        juce::Font getComboBoxFont(juce::ComboBox& box) override
+        {
+            return withDefaultMetrics(juce::FontOptions{ juce::jmin(10.0f, (float)box.getHeight() * 0.4f) });
+        }
+
         void drawButtonBackground(juce::Graphics& g,
             juce::Button& button,
             const juce::Colour& backgroundColour,
@@ -94,7 +104,7 @@ namespace jr
             path.lineTo((float)arrowZone.getCentreX(), (float)arrowZone.getCentreY() + 3.0f);
             path.lineTo((float)arrowZone.getRight() - 3.0f, (float)arrowZone.getCentreY() - 2.0f);
 
-            g.setColour(juce::Colours::black.withAlpha((box.isEnabled() ? 0.9f : 0.2f)));
+            g.setColour(juce::Colours::black.withAlpha((box.isEnabled() ? 1.0f : 0.2f)));
             g.strokePath(path, juce::PathStrokeType(2.0f));
         }
 
@@ -138,7 +148,7 @@ namespace jr
 
                 r.reduce(juce::jmin(5, area.getWidth() / 20), 0);
 
-                auto font = getPopupMenuFont();
+                auto font = getPopupMenuFont().withHeight(10.0f);
 
                 auto maxFontHeight = (float)r.getHeight() / 1.3f;
 
@@ -300,8 +310,33 @@ namespace jr
             {
                 g.setColour(component.findColour(juce::ToggleButton::tickColourId));
                 auto tick = getTickShape(0.75f);
-                g.fillPath(tick, tick.getTransformToScaleToFit(tickBounds.reduced(4, 5).toFloat(), false));
+                g.fillPath(tick, tick.getTransformToScaleToFit(tickBounds.reduced(3, 4).toFloat(), false));
             }
+        }
+
+        void drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
+            bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
+        {
+            auto fontSize = juce::jmin(10.0f, (float)button.getHeight() * 0.75f);
+            auto tickWidth = (float)button.getHeight();
+
+            drawTickBox(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
+                tickWidth, tickWidth,
+                button.getToggleState(),
+                button.isEnabled(),
+                shouldDrawButtonAsHighlighted,
+                shouldDrawButtonAsDown);
+
+            g.setColour(button.findColour(juce::ToggleButton::textColourId));
+            g.setFont(fontSize);
+
+            if (!button.isEnabled())
+                g.setOpacity(0.5f);
+
+            g.drawFittedText(button.getButtonText(),
+                button.getLocalBounds().withTrimmedLeft(juce::roundToInt(tickWidth) + 10)
+                .withTrimmedRight(2),
+                juce::Justification::centredLeft, 10);
         }
 
         void drawLabel(juce::Graphics& g, juce::Label& label) override
@@ -310,11 +345,10 @@ namespace jr
 
             if (!label.isBeingEdited())
             {
-                auto alpha = label.isEnabled() ? 1.0f : 0.5f;
                 const juce::Font font(getLabelFont(label));
 
                 g.setColour(juce::Colours::black);
-                g.setFont(font);
+                g.setFont(font.withHeight(10.0f));
 
                 auto textArea = getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
 
@@ -323,9 +357,5 @@ namespace jr
                     label.getMinimumHorizontalScale());
             }
         }
-
-    private:
-        juce::Colour buttonColour{ juce::Colour::fromRGB(176, 118, 153) };
-        juce::Colour darkerButtonColour{ juce::Colour::fromRGB(136, 116, 152) };
     };
 }

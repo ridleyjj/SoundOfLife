@@ -54,7 +54,7 @@ SoundOfLifeAudioProcessorEditor::SoundOfLifeAudioProcessorEditor (SoundOfLifeAud
 
     p.addTimerListener(this);
 
-    setSize (550, 810);
+    setSize (412, 607);
     setResizable(false, false);
 }
 
@@ -79,41 +79,44 @@ void SoundOfLifeAudioProcessorEditor::paint (juce::Graphics& g)
 void SoundOfLifeAudioProcessorEditor::resized()
 {
     auto contentContainer = getBounds();
-    auto presetRow = contentContainer.removeFromTop(85);
-    auto sectionA = contentContainer.removeFromTop(185);
+    auto presetRow = contentContainer.removeFromTop(64);
+    auto sectionA = contentContainer.removeFromTop(139);
     auto sectionB = sectionA.removeFromRight(sectionA.proportionOfWidth(0.5f));
 
     auto sectionLabelSize = sectionA.proportionOfHeight(0.15f);
     auto sectionRowSize = sectionA.proportionOfHeight(0.25f);
 
-    auto sectionC = contentContainer;
+    auto sectionC = contentContainer.removeFromTop(404);
 
     presetPanel.setBounds(presetRow);
 
     // section A
     sectionABox = sectionA.reduced(1);
-    sectionA.removeFromTop(4); // top margin for label
-    sectionALabel.setBounds(sectionA.removeFromTop(sectionLabelSize).reduced(4));
-    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize * 2.0f).reduced(4, 0));
-    velocitySlider.setBounds(sectionA.reduced(4, 12));
+    sectionA.removeFromTop(3); // top margin for label
+    sectionALabel.setBounds(sectionA.removeFromTop(sectionLabelSize).reduced(3));
+    scalePanel.setBounds(sectionA.removeFromTop(sectionRowSize * 2.0f).reduced(3, 0));
+    velocitySlider.setBounds(sectionA.reduced(3, 10));
+    jr::JuceUtils::drawSliderLabelWithCustomGap(velocitySlider, velocityLabel, 18);
 
     // section B
     sectionBBox = sectionB.reduced(1);
-    sectionB.removeFromTop(4); // top margin for label
-    sectionBLabel.setBounds(sectionB.removeFromTop(sectionLabelSize).reduced(4));
-    timerButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
-    tempoSyncButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(4, 8));
+    sectionB.removeFromTop(3); // top margin for label
+    sectionBLabel.setBounds(sectionB.removeFromTop(sectionLabelSize).reduced(3));
+    timerButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(3, 6));
+    tempoSyncButton.setBounds(sectionB.removeFromTop(sectionRowSize * 0.8f).reduced(3, 6));
     sectionB.removeFromTop(sectionRowSize * 0.4f); // spacer between checkboxes and slider
-    frequencySlider.setBounds(sectionB.reduced(4, 12));
+    frequencySlider.setBounds(sectionB.reduced(3, 10));
+    jr::JuceUtils::drawSliderLabelWithCustomGap(frequencySlider, frequencyLabel, 18);
 
     sectionCBox = sectionC.reduced(1);
     sectionC = sectionC.reduced(1);
-    auto buttonRow = sectionC.removeFromTop(54).reduced(19, 6);
-    nextButton.setBounds(buttonRow.removeFromLeft(230).reduced(15, 0));
-    randomButton.setBounds(buttonRow.removeFromLeft(170).reduced(15, 0));
-    clearButton.setBounds(buttonRow.reduced(15, 0));
-    sectionC.removeFromBottom(4);
-    lifeGrid->setBounds(sectionC);
+    sectionC.removeFromTop(2); // margin above button row
+    auto buttonRow = sectionC.removeFromTop(41).reduced(22, 3);
+    nextButton.setBounds(buttonRow.removeFromLeft(172).reduced(6, 0));
+    randomButton.setBounds(buttonRow.removeFromLeft(127).reduced(6, 0));
+    clearButton.setBounds(buttonRow.reduced(6, 0));
+    sectionC.removeFromBottom(sectionC.proportionOfHeight(0.02f));
+    lifeGrid->setBounds(sectionC.removeFromTop(352));
 }
 
 //============================= Callbacks ================================

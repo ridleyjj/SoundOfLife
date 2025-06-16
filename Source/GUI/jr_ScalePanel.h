@@ -22,14 +22,14 @@ namespace jr
 
 		void resized() override
 		{
-			const int margin = 8;
+			const int margin = 4;
 			const auto container = getLocalBounds().reduced(margin);
 			auto bounds = container;
 			
 			panelLabel.setBounds(bounds.removeFromTop(container.proportionOfHeight(0.25f)));
 			bounds.removeFromBottom(container.proportionOfHeight(0.2f)); // spacer at bottom of panel
 
-			noteSelectionBox.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.35f)));
+			noteSelectionBox.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.4f)));
 			scaleSelectionBox.setBounds(bounds.reduced(margin, 0));
 		}
 

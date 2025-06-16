@@ -25,5 +25,13 @@ namespace jr
 
             slider->setRange(minVal, maxVal, step);
         }
+
+        /**
+        Sets the bounds of a label component relative to a slider component. Sets the label above the slider by the given gapSize
+        */
+        static void drawSliderLabelWithCustomGap(juce::Slider& slider, juce::Label& label, int gapSize, int labelHeight = 20)
+        {
+            label.setBounds(slider.getX(), (slider.getY() - gapSize), slider.getWidth(), labelHeight);
+        }
     };
 }

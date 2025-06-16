@@ -37,12 +37,12 @@ namespace jr
 
         void resized() override
         {
-            const int xMargin = 4;
-            const int yMargin = 6;
+            const int xMargin = 3;
+            const int yMargin = 4;
             const auto container = getLocalBounds().reduced(xMargin);
             auto bounds = container;
 
-            label.setBounds(bounds.removeFromTop(25));
+            label.setBounds(bounds.removeFromTop(20));
 
             presetList.setBounds(bounds.removeFromLeft(container.proportionOfWidth(0.6f)).reduced(xMargin, yMargin));
 
