@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace BinaryData
+namespace PresetData
 {
     extern const char*  Beacon_preset;
     const int           Beacon_presetSize = 3308;

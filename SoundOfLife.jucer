@@ -11,8 +11,8 @@
                 file="Source/LookAndFeel/Resources/PokemonGameBoyFont.cpp"/>
           <FILE id="jsyWIS" name="PokemonGameBoyFont.h" compile="0" resource="1"
                 file="Source/LookAndFeel/Resources/PokemonGameBoyFont.h"/>
-          <FILE id="JGmfNB" name="BinaryData.cpp" compile="1" resource="1" file="Source/LookAndFeel/Resources/BinaryData.cpp"/>
-          <FILE id="gUYAOR" name="BinaryData.h" compile="0" resource="1" file="Source/LookAndFeel/Resources/BinaryData.h"/>
+          <FILE id="JGmfNB" name="PresetData.cpp" compile="1" resource="1" file="Source/LookAndFeel/Resources/PresetData.cpp"/>
+          <FILE id="gUYAOR" name="PresetData.h" compile="0" resource="1" file="Source/LookAndFeel/Resources/PresetData.h"/>
           <GROUP id="{2EFA1D9F-8BEF-53D7-61C0-D508281D99E7}" name="presets">
             <FILE id="GRNryl" name="Beacon.preset" compile="0" resource="1" file="Source/LookAndFeel/Resources/presets/Beacon.preset"/>
             <FILE id="fahERz" name="Glider.preset" compile="0" resource="1" file="Source/LookAndFeel/Resources/presets/Glider.preset"/>
