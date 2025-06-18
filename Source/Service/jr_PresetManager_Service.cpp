@@ -11,7 +11,7 @@ namespace jr
     const juce::String PresetManager::extension{"preset"};
     const juce::String PresetManager::underscore{"_"};
     const juce::String PresetManager::presetNameProperty{"presetName"};
-    const std::vector<juce::String> PresetManager::excludedParams{ ID::AUTO_GEN_MODE, ID::TEMPO_SYNC_MODE, ID::VELOCITY, ID::FREQUENCY, ID::ACCEPT_MIDI_NOTE_OFF_INPUT };
+    const std::vector<juce::String> PresetManager::excludedParams{ ID::AUTO_GEN_MODE, ID::TEMPO_SYNC_MODE, ID::VELOCITY, ID::FREQUENCY, ID::ACCEPT_MIDI_NOTE_OFF_INPUT, ID::SCALE_TYPE, ID::BASE_NOTE };
 
     PresetManager::PresetManager(juce::AudioProcessorValueTreeState &_apvts) : apvts(_apvts)
     {

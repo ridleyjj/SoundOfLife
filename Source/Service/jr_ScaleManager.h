@@ -6,7 +6,7 @@
 
 namespace jr
 {
-	class ScaleManager
+	class ScaleManager : public juce::AudioParameterInt::Listener
 	{
 	public:
 		ScaleManager(juce::AudioProcessorValueTreeState& _apvts);
@@ -28,9 +28,9 @@ namespace jr
 			*baseNoteIndexParameter = selectedIndex;
 		}
 
-		int getCurrentScaleTypeIndex() { return apvts.getParameterAsValue(ID::SCALE_TYPE).getValue(); }
+		int getCurrentScaleTypeIndex() { return currentScaleTypeIndex; }
 		
-		int getCurrentBaseNoteIndex() { return apvts.getParameterAsValue(ID::BASE_NOTE).getValue(); }
+		int getCurrentBaseNoteIndex() { return currentBaseNoteIndex; }
 
 		int getNoteNumberFromScaleIndex(int scaleIndex);
 
@@ -49,9 +49,16 @@ namespace jr
 		If the provided note number is either not in the currently selected scale, or is out of range of the grid, -1 is returned
 		*/
 		int getCellIndexFromNoteNumber(int noteNumber);
+
+		void parameterValueChanged(int parameterIndex, float newValue) override;
+
+		void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override {}
 		
 	private:
 		const int chromaticStartIndex = 12;
+		
+		int currentScaleTypeIndex = 0;
+		int currentBaseNoteIndex = 0;
 
 		juce::AudioParameterInt* baseNoteIndexParameter;
 		juce::AudioParameterInt* scaleTypeIndexParameter;

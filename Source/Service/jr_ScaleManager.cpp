@@ -6,7 +6,9 @@ namespace jr
 	ScaleManager::ScaleManager(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts)
 	{
 		baseNoteIndexParameter = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(ID::BASE_NOTE));
+		baseNoteIndexParameter->addListener(this);
 		scaleTypeIndexParameter = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(ID::SCALE_TYPE));
+		scaleTypeIndexParameter->addListener(this);
 	}
 
 	int ScaleManager::getNoteNumberFromScaleIndex(int scaleIndex)
@@ -123,5 +125,11 @@ namespace jr
 			cellIndex = -1;
 
 		return cellIndex;
+	}
+
+	void ScaleManager::parameterValueChanged(int parameterIndex, float newValue)
+	{
+		currentBaseNoteIndex = apvts.getParameterAsValue(ID::BASE_NOTE).getValue();
+		currentScaleTypeIndex = apvts.getParameterAsValue(ID::SCALE_TYPE).getValue();
 	}
 }
